@@ -3,7 +3,6 @@ import React from "react";
 //Reminder for self: 
 //const Header = function(props) {*function body*}
 const Header = (props) => {
-  console.log(props)
   return <h1>{props.course}</h1>;
 };
 
