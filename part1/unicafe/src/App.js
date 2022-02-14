@@ -2,7 +2,21 @@ import React, { useState } from "react";
 
 const Button = ({handleClick, text}) => (
   <button onClick={handleClick}> {text} </button>
-)
+);
+
+const Statistics = (props) => {
+  return (
+    <div>
+    <h1>statistics</h1>
+      <p>good {props.good}</p>
+      <p>neutral {props.neutral}</p>
+      <p>bad {props.bad}</p>
+      <p>all {props.bad + props.neutral + props.good}</p>
+      <p>Average: {props.average}</p>
+      <p>Positive: {props.positive}</p>
+    </div>
+  )
+};
 
 const App = () => {
   // save clicks of each button to its own state
@@ -25,7 +39,7 @@ const App = () => {
     }
     setNewFeedback(allFeedbacks.concat(value))
 
-    //Count average
+    //Count average & positive feedback
     let sum = 0;
     allFeedbacks.forEach(value => {
       sum += value      
@@ -40,14 +54,7 @@ const App = () => {
       <Button handleClick={() => updateValues(1)} text='Good' />
       <Button handleClick={() => updateValues(0)} text='Neutral' />
       <Button handleClick={() => updateValues(-1)} text='Bad' />
-      <h1>statistics</h1>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>all {bad + neutral + good}</p>
-      <p>Average: {average}</p>
-      <p>Positive: {positive}</p>
-      
+      <Statistics good={good} neutral={neutral} bad={bad} average={average} positive={positive} />
 
       {console.log(allFeedbacks)}
       {console.log(average)}
