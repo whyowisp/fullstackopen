@@ -12,26 +12,53 @@ const App = () => {
   ];
 
   const [selected, setSelected] = useState(0);
-  const [votes, setVote] = useState(new Array(6).fill(0))
+  const [votes, setVote] = useState(new Array(6).fill(0));
+  const [mostVoted, setMostVoted] = useState({
+    mostVotedAnecdote: "",
+    votes: 0,
+  });
 
-  const setRandomNumberToSelected = () => {
+  const nextAnecdote = () => {
     setSelected(Math.floor(Math.random() * 6));
+    setAnecdoteByMostVotes();
   };
 
-  const saveVote = () => {
-    const copyOfVotes = [...votes] 
-    copyOfVotes[selected] += 1
-    console.log(copyOfVotes)
-    setVote(copyOfVotes)
+  const setAnecdoteByMostVotes = () => {
+    let highestVote = 0;
+    let voteIndex = 0;
+
+    for (let i = 0; i < 6; i++) {
+      if (votes[i] > highestVote) {
+        highestVote = votes[i];
+        voteIndex = i;
+      }
+    }
+
+    setMostVoted({
+      mostVotedAnecdote: anecdotes[voteIndex],
+      votes: highestVote,
+    });
+    console.log(mostVoted);
+  };
+
+  const updateVotes = () => {
+    const copyOfVotes = [...votes];
+    copyOfVotes[selected] += 1;
+    console.log(copyOfVotes);
+    setVote(copyOfVotes);
   };
 
   return (
     <div>
+      <h1>Anecdote of the day</h1>
       {anecdotes[selected]}
       <p>has {votes[selected]} votes</p>
       <br></br>
-      <button onClick={saveVote}>vote</button>
-      <button onClick={setRandomNumberToSelected}>next anecdote</button>
+      <button onClick={updateVotes}>vote</button>
+      <button onClick={nextAnecdote}>next anecdote</button>
+      <h1>Anecdote with most votes</h1>
+      {mostVoted.mostVotedAnecdote}
+      <p>has {mostVoted.votes} votes</p>
     </div>
   );
 };
