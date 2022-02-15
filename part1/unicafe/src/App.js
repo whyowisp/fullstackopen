@@ -6,9 +6,10 @@ const Button = ({ handleClick, text }) => (
 
 const StatisticsLine = ({ text, value }) => {
   return (
-    <div>
-      {text} {value}
-    </div>
+    <tr>
+      <td>{text}</td>
+      <td>{value}</td>
+    </tr>
   );
 };
 
@@ -17,18 +18,19 @@ const Statistics = (props) => {
 
   if (props.allFeedbacks.length !== 0) {
     return (
-      <div>
+      <table>
+        <thead>
         <StatisticsLine text="good" value={props.good} />
         <StatisticsLine text="neutral" value={props.neutral} />
         <StatisticsLine text="bad" value={props.bad} />
-
         <StatisticsLine
           text="all"
           value={props.good + props.neutral + props.bad}
         />
         <StatisticsLine text="average" value={props.average} />
-        <StatisticsLine text="positive" value={props.positive} />
-      </div>
+        <StatisticsLine text="positive" value={props.positive + ' %'} />
+        </thead>
+      </table>
     );
   }
   return <div>No feedback given</div>;
