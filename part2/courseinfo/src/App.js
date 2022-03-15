@@ -36,13 +36,14 @@ const Part = ({ name, exercises }) => {
 };
 
 const Total = (props) => {
-  const { parts } = props;
+  const { parts } = props
+  const allExercises = parts.map(part => part.exercises) 
 
-  const allExercises = parts.map(part => part.exercises);
-  let total = 0;
-  allExercises.forEach(element => {
-    total += element
-  });
+  const initialValue = 0
+  const total = allExercises.reduce(
+    (previousValue, currentValue) => previousValue + currentValue,
+    initialValue
+  );
 
   return <b>Total of {total} exercises</b>;
 };
