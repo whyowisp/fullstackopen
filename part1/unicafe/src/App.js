@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+//Muutos
 const Button = ({ handleClick, text }) => (
   <button onClick={handleClick}> {text} </button>
 );
