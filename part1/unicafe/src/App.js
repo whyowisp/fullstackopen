@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-//Neljäs muutos
+//Viides muutos
 const Button = ({ handleClick, text }) => (
   <button onClick={handleClick}> {text} </button>
 );
