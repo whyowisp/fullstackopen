@@ -14,22 +14,17 @@ const Course = (props) => {
 };
 
 const Content = (props) => {
-  console.log(props)
+  const { parts } = props 
   return (
     <div>
-      <Part part={props.parts[0]} />
-      <Part part={props.parts[1]} />
-      <Part part={props.parts[2]} />
+        {parts.map(part => <p key={part.id}><Part name={part.name} exercises={part.exercises}/></p>)}
     </div>
   );
 };
 
-const Part = (props) => {
-  console.log(props)
+const Part = ({name, exercises}) => {
   return (
-    <p>
-      {props.part.name} {props.part.exercises}
-    </p>
+    <p>{name} {exercises} </p>
   );
 };
 
@@ -56,6 +51,11 @@ const App = () => {
         name: 'State of a component',
         exercises: 14,
         id: 3
+      },
+      { 
+        name: 'Redux',
+        exercises: 11,
+        id: 4
       }
     ]
   }
