@@ -1,8 +1,9 @@
 import React from "react";
+import Course from './Course';
 
-const Header = (props) => {
-  return <h1>{props.courseName}</h1>;
-};
+//Part 2.5 Note! : My components are probably so interwined so i couldn´t just take
+//                 one component out and move it to another module. This solution 
+//                 was only one i got this working. 
 
 const Courses = (props) => {
   const { courses } = props;
@@ -13,50 +14,6 @@ const Courses = (props) => {
       ))}
     </div>
   );
-};
-
-const Course = (props) => {
-  return (
-    <div>
-      <Header courseName={props.course.name} />
-      <Content parts={props.course.parts} />
-      <Total parts={props.course.parts} />
-    </div>
-  );
-};
-
-const Content = (props) => {
-  const { parts } = props;
-  return (
-    <div>
-      {parts.map((part) => (
-        <p key={part.id}>
-          <Part name={part.name} exercises={part.exercises} />
-        </p>
-      ))}
-    </div>
-  );
-};
-
-const Part = ({ name, exercises }) => {
-  return (
-    <p>
-      {name} {exercises}
-    </p>
-  );
-};
-
-const Total = (props) => {
-  const { parts } = props;
-  const allExercises = parts.map((part) => part.exercises);
-
-  const initialValue = 0;
-  const total = allExercises.reduce(
-    (previousValue, currentValue) => previousValue + currentValue,
-    initialValue
-  );
-
-  return <b>Total of {total} exercises</b>;
 };
 
 const App = () => {
