@@ -6,12 +6,17 @@ const App = () => {
 
   const addName = (e) => {
     e.preventDefault();
-    //console.log("click", e.target);
-    const nameObject = {
-      name: newName,
-    };
-    setPersons(persons.concat(nameObject));
-    setNewName("");
+
+    const namesOnly = persons.map((person) => person.name);
+    if (namesOnly.includes(newName)) {
+      alert(`${newName} is already added to phonebook`);
+    } else {
+      const nameObject = {
+        name: newName,
+      };
+      setPersons(persons.concat(nameObject));
+      setNewName("");
+    }
   };
 
   const handleNameInputChange = (e) => {
