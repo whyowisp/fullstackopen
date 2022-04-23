@@ -10,35 +10,51 @@ const QueryForm = ({ queryFieldChange }) => {
   );
 };
 
-const Results = ({ foundCountries }) => {
-  if (foundCountries.length > 10) {
-    return <div>Too many matches, specify another filter</div>;
-  } else if (foundCountries.length > 1) {
-    return (
-      <div>
-        {foundCountries.map((country) => (
-          <div key={country.name.common}>{country.name.common}</div>
-        ))}
-      </div>
-    );
-  } else if (foundCountries.length === 1) {
-    const country = foundCountries[0];
-    const languages = Object.values(country.languages);
+const CountryData = ({ country }) => {
+  const [isActive, setIsActive] = useState(false);
+  const languages = Object.values(country.languages);
 
+  const handleShow = () => {
+    setIsActive(true);
+  };
+
+  if (isActive) {
     return (
       <div>
-        <h1>{country.name.common}</h1>  
+        <h1>{country.name.common}</h1>
         <div>
           Capital: {country.capital} <br></br>
           Area: {country.area}
         </div>
         <h3>Languages</h3>
         <ul>
-          {languages.map((language) => (
-            <li key={0}>{language}</li>
+          {languages.map((language, i) => (
+            <li key={language}>{language}</li>
           ))}
         </ul>
         <img src={country.flags.png} alt="country flag .png" />
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <span>{country.name.common}  </span>
+        <button onClick={handleShow}>Show</button>
+      </div>
+    );
+  }
+};
+
+const Results = ({ foundCountries }) => {
+  //console.log(foundCountries.length)
+  if (foundCountries.length > 10) {
+    return <div>Too many matches, specify another filter</div>;
+  } else if (foundCountries.length >= 1) {
+    return (
+      <div>
+        {foundCountries.map((country) => (
+          <CountryData country={country} />
+        ))}
       </div>
     );
   } else {
@@ -60,9 +76,9 @@ const App = () => {
   const queryFieldChange = (e) => {
     const queryResults = countries.filter((country) =>
       country.name.common.toLowerCase().includes(e.target.value)
-    );
-    //console.log(queryResults);
+    );;
     setFoundCountries(queryResults);
+    //queryResults.forEach((result, i) => console.log(i, result.name.common));
   };
 
   return (
