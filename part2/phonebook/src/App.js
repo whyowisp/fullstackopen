@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import React from "react";
-import axios from "axios";
+import personService from "./services/persons";
 
 const Filter = ({ handleChange }) => {
   return (
@@ -51,9 +51,9 @@ const App = () => {
   const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      console.log(response);
-      setPersons(response.data);
+    personService.getAll()
+    .then((initialData) => {
+      setPersons(initialData);
     });
   }, []);
 
@@ -70,11 +70,11 @@ const App = () => {
         name: newName,
         number: newNumber,
       };
-      axios
-        .post("http://localhost:3001/persons", nameObject)
-        .then((response) => {
-          setPersons(persons.concat(response.data));
-        });
+      personService
+      .create(nameObject)
+      .then(returnedData => {
+        setPersons(persons.concat(returnedData))
+      });
     }
     //Reset fields
     setNewName("");
@@ -90,12 +90,13 @@ const App = () => {
   };
 
   const handleSearchChange = (e) => {
+    console.log('=== persons App.js [74] ===', persons);
     const foundPersons = persons.filter((person) =>
       person.name.toLowerCase().includes(e.target.value)
     );
     setSearchResults(foundPersons);
   };
-  //addNewItem, newName, newNumber, handleNameChange, handleNumberChange
+
   return (
     <div>
       <h2>Phonebook</h2>
