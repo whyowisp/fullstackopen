@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import React from "react";
-import axios from 'axios'
+import axios from "axios";
 
 const Filter = ({ handleChange }) => {
   return (
@@ -45,43 +45,40 @@ const PersonForm = ({
 };
 
 const App = () => {
-  /*
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456", id: 1 },
-    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
-    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
-  ]);*/
-  const [persons, setPersons] = useState([])
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log(response)
-        setPersons(response.data)
-      })
-  }, [])
+    axios.get("http://localhost:3001/persons").then((response) => {
+      console.log(response);
+      setPersons(response.data);
+    });
+  }, []);
 
   //function handles both name and number
   const addNewItem = (e) => {
     e.preventDefault();
-
     const namesOnly = persons.map((person) => person.name);
+
     if (namesOnly.includes(newName)) {
       alert(`${newName} is already added to phonebook`);
     } else {
+      //Create new nameObject and send it to server. Also set updated (response) data to persons state.
       const nameObject = {
         name: newName,
         number: newNumber,
       };
-      setPersons(persons.concat(nameObject));
-      setNewName("");
-      setNewNumber("");
+      axios
+        .post("http://localhost:3001/persons", nameObject)
+        .then((response) => {
+          setPersons(persons.concat(response.data));
+        });
     }
+    //Reset fields
+    setNewName("");
+    setNewNumber("");
   };
 
   const handleNameChange = (e) => {
@@ -93,8 +90,6 @@ const App = () => {
   };
 
   const handleSearchChange = (e) => {
-    //setSearchTerm(e.target.value);
-
     const foundPersons = persons.filter((person) =>
       person.name.toLowerCase().includes(e.target.value)
     );
