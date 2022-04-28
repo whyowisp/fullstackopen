@@ -11,4 +11,13 @@ const create = (newObject) => {
   return request.then((response) => response.data);
 };
 
-export default { getAll, create };
+const remove = (objectId) => {
+  const request = axios.delete(`${baseUrl}/${objectId}`);
+  return request
+    .then((response) => response.data)
+    .catch((error) => {
+      console.log('=== error persons.js [19] ===', error);
+    });
+};
+
+export default { getAll, create, remove };

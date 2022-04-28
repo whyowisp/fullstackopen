@@ -10,12 +10,13 @@ const Filter = ({ handleChange }) => {
   );
 };
 
-const Results = ({ searchResults }) => {
+const Results = ({ searchResults, removeItem }) => {
   return (
     <div>
       {searchResults.map((person) => (
-        <p key={person.name}>
-          {person.name} {person.number}
+        <p key={person.id}>
+          {person.name} {person.number}{" "}
+          <button onClick={() => removeItem(person.id)}>delete</button>
         </p>
       ))}
     </div>
@@ -51,11 +52,21 @@ const App = () => {
   const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
-    personService.getAll()
-    .then((initialData) => {
+    personService.getAll().then((initialData) => {
       setPersons(initialData);
     });
   }, []);
+
+  const removeItem = (id) => {
+    const personToRemove = persons.find((person) => person.id === id);
+    if (window.confirm("Do you really want to delete " + personToRemove.name)) {
+      personService.remove(id).then(() => {
+        //More reliable solution would run axios.getAll again, but for this case like this
+        setPersons(persons.filter((person) => person.id !== id));
+        setSearchResults([]);
+      });
+    }
+  };
 
   //function handles both name and number
   const addNewItem = (e) => {
@@ -70,10 +81,8 @@ const App = () => {
         name: newName,
         number: newNumber,
       };
-      personService
-      .create(nameObject)
-      .then(returnedData => {
-        setPersons(persons.concat(returnedData))
+      personService.create(nameObject).then((returnedData) => {
+        setPersons(persons.concat(returnedData));
       });
     }
     //Reset fields
@@ -90,11 +99,14 @@ const App = () => {
   };
 
   const handleSearchChange = (e) => {
-    console.log('=== persons App.js [74] ===', persons);
-    const foundPersons = persons.filter((person) =>
-      person.name.toLowerCase().includes(e.target.value)
-    );
-    setSearchResults(foundPersons);
+    try {
+      const foundPersons = persons.filter((person) =>
+        person.name.toLowerCase().includes(e.target.value)
+      );
+      setSearchResults(foundPersons);
+    } catch (error) {
+      console.log("=== error App.js [105] === " + error);
+    }
   };
 
   return (
@@ -110,7 +122,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h3>Numbers</h3>
-      <Results searchResults={searchResults} />
+      <Results searchResults={searchResults} removeItem={removeItem} />
     </div>
   );
 };

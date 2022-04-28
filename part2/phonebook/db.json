@@ -1,11 +1,6 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "040-123456",
-      "id": 1
-    },
-    {
       "name": "Ada Lovelace",
       "number": "39-44-5323523",
       "id": 2
@@ -26,34 +21,9 @@
       "id": 5
     },
     {
-      "name": "Mikko Sipola",
-      "number": "98765",
-      "id": 6
-    },
-    {
-      "name": "Hessu",
-      "number": "",
-      "id": 7
-    },
-    {
       "name": "Jaakko Mikkola",
       "number": "98765",
       "id": 8
-    },
-    {
-      "name": "Heimo Huima",
-      "number": "4567",
-      "id": 9
-    },
-    {
-      "name": "Haima Hui,a",
-      "number": "9876",
-      "id": 10
-    },
-    {
-      "name": "Lokki Lakki",
-      "number": "3456",
-      "id": 11
     },
     {
       "name": "Teppo Tuppu",
@@ -61,14 +31,9 @@
       "id": 12
     },
     {
-      "name": "Reppu Heppu",
-      "number": "45678",
+      "name": "Taneli Töneli",
+      "number": "56342-672",
       "id": 13
-    },
-    {
-      "name": "Jäppi Jaakkola",
-      "number": "45678",
-      "id": 14
     }
   ]
 }
