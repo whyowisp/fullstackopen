@@ -72,9 +72,24 @@ const App = () => {
   const addNewItem = (e) => {
     e.preventDefault();
     const namesOnly = persons.map((person) => person.name);
+    const itemToEdit = persons.find((person) => person.name === newName);
 
-    if (namesOnly.includes(newName)) {
-      alert(`${newName} is already added to phonebook`);
+    //In JS AND (&&) evaluates from left to right returning immediately after first falsy operand
+    if (
+      namesOnly.includes(newName) &&
+      window.confirm(
+        `${newName} is already in the phonebook, do you want to replace the old number with new one?`
+      )
+    ) {
+      const editedItem = { ...itemToEdit, number: newNumber };
+      personService.update(itemToEdit.id, editedItem).then((itemReturned) => {
+        setPersons(
+          persons.map(
+            (person) => (person.id !== itemToEdit.id ? person : itemReturned)
+            //console.log('=== person.id + itemToEdit.id App.js [86] === ' + typeof person.id + typeof itemReturned.id)
+          )
+        );
+      });
     } else {
       //Create new nameObject and send it to server. Also set updated (response) data to persons state.
       const nameObject = {
