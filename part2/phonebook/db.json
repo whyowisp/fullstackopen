@@ -17,7 +17,7 @@
     },
     {
       "name": "Freija Sipola",
-      "number": "040-123456",
+      "number": "45343",
       "id": 5
     },
     {
@@ -39,6 +39,21 @@
       "name": "Jakke Jökkinen",
       "number": "123",
       "id": 15
+    },
+    {
+      "name": "Vanja Sipola",
+      "number": "9876556",
+      "id": 16
+    },
+    {
+      "name": "Kukko Kiekuu",
+      "number": "98767",
+      "id": 17
+    },
+    {
+      "name": "Kukko  Ukko",
+      "number": "876789",
+      "id": 18
     }
   ]
 }

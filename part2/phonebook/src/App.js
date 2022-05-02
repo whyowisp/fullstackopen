@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import React from "react";
 import personService from "./services/persons";
+import './index.css'
 
 const Filter = ({ handleChange }) => {
   return (
@@ -45,11 +46,23 @@ const PersonForm = ({
   );
 };
 
+const Notification = ({message}) => {
+  if (message === null) {
+    return null
+  }
+  return (
+    <div className='success'>
+      {message}
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     personService.getAll().then((initialData) => {
@@ -74,32 +87,35 @@ const App = () => {
     const namesOnly = persons.map((person) => person.name);
     const itemToEdit = persons.find((person) => person.name === newName);
 
-    //In JS AND (&&) evaluates from left to right returning immediately after first falsy operand
     if (
       namesOnly.includes(newName) &&
       window.confirm(
         `${newName} is already in the phonebook, do you want to replace the old number with new one?`
       )
     ) {
+      //Update existing
       const editedItem = { ...itemToEdit, number: newNumber };
       personService.update(itemToEdit.id, editedItem).then((itemReturned) => {
         setPersons(
           persons.map(
             (person) => (person.id !== itemToEdit.id ? person : itemReturned)
-            //console.log('=== person.id + itemToEdit.id App.js [86] === ' + typeof person.id + typeof itemReturned.id)
           )
         );
+        setMessage(`${itemReturned.name} phone number updated`);
       });
     } else {
-      //Create new nameObject and send it to server. Also set updated (response) data to persons state.
+      //Create new
       const nameObject = {
         name: newName,
         number: newNumber,
       };
       personService.create(nameObject).then((returnedData) => {
         setPersons(persons.concat(returnedData));
+        setMessage(`${returnedData.name} added to the phonebook`);
       });
+      
     }
+    setTimeout(() => {setMessage(null)}, 5000);
     //Reset fields
     setNewName("");
     setNewNumber("");
@@ -128,6 +144,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Filter handleChange={handleSearchChange} />
+      <Notification message={message}/>
       <h3>add a new</h3>
       <PersonForm
         addNewItem={addNewItem}
