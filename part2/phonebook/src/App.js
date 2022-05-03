@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import React from "react";
 import personService from "./services/persons";
-import './index.css'
+// I changed later to inline styles instead .css file 
+//import "./index.css";
 
 const Filter = ({ handleChange }) => {
   return (
@@ -46,23 +47,40 @@ const PersonForm = ({
   );
 };
 
-const Notification = ({message}) => {
-  if (message === null) {
-    return null
+const Notification = ({ message }) => {
+  const error = {
+    color: 'red',
+    background: 'lightgrey',
+    fontSize: '20px',
+    borderStyle: 'solid',
+    borderRadius: '5px',
+    padding: '10px',
+    marginBottom: '10px'
+  };
+  const success = {
+    color: 'green',
+    background: 'lightgrey',
+    fontSize: '20px',
+    borderStyle: 'solid',
+    borderRadius: '5px',
+    padding: '10px',
+    marginBottom: '10px'
+  };
+  if (message.msgType === null) {
+    return null;
+  } else if (message.msgType === "success") {
+    return <div style={success}>{message.msg}</div>;
+  } else if (message.msgType === "error") {
+    return <div style={error}>{message.msg}</div>;
   }
-  return (
-    <div className='success'>
-      {message}
-    </div>
-  )
-}
+};
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const [message, setMessage] = useState(null)
+  const [message, setMessage] = useState({ msg: null, msgType: null });
 
   useEffect(() => {
     personService.getAll().then((initialData) => {
@@ -72,16 +90,29 @@ const App = () => {
 
   const removeItem = (id) => {
     const personToRemove = persons.find((person) => person.id === id);
+
     if (window.confirm("Do you really want to delete " + personToRemove.name)) {
-      personService.remove(id).then(() => {
-        //More reliable solution would run axios.getAll again, but for this case like this
-        setPersons(persons.filter((person) => person.id !== id));
-        setSearchResults([]);
-      });
+      personService
+        .remove(id)
+        .then()
+        .catch(() => {
+          setMessage({
+            msg: `Information of ${personToRemove.name} has already removed from server`,
+            msgType: "error",
+          });
+        });
+
+      //Reset persons and search results
+      setPersons(persons.filter((person) => person.id !== id));
+      setSearchResults([]);
+
+      setTimeout(() => {
+        setMessage({ msg: null, msgType: null });
+      }, 5000);
     }
   };
 
-  //function handles both name and number
+  //Bloated function handling updating old and creating new
   const addNewItem = (e) => {
     e.preventDefault();
     const namesOnly = persons.map((person) => person.name);
@@ -95,13 +126,22 @@ const App = () => {
     ) {
       //Update existing
       const editedItem = { ...itemToEdit, number: newNumber };
-      personService.update(itemToEdit.id, editedItem).then((itemReturned) => {
+
+      personService.update(itemToEdit.id, editedItem).then((dataReturned) => {
         setPersons(
-          persons.map(
-            (person) => (person.id !== itemToEdit.id ? person : itemReturned)
+          persons.map((person) =>
+            person.id !== itemToEdit.id ? person : dataReturned
           )
         );
-        setMessage(`${itemReturned.name} phone number updated`);
+        setMessage({
+          msg: `${itemToEdit.name} phone number updated`,
+          msgType: "success",
+        });
+      }).catch(() => {
+        setMessage({
+          msg: `Information of ${newName} has already removed from server`,
+          msgType: "error",
+        })
       });
     } else {
       //Create new
@@ -109,14 +149,19 @@ const App = () => {
         name: newName,
         number: newNumber,
       };
-      personService.create(nameObject).then((returnedData) => {
-        setPersons(persons.concat(returnedData));
-        setMessage(`${returnedData.name} added to the phonebook`);
+      personService.create(nameObject).then((dataReturned) => {
+        setPersons(persons.concat(dataReturned));
+        setMessage({
+          msg: `${dataReturned.name} added to the phonebook`,
+          msgType: "success",
+        });
       });
-      
     }
-    setTimeout(() => {setMessage(null)}, 5000);
-    //Reset fields
+
+    //Reset fields and messages
+    setTimeout(() => {
+      setMessage({ msg: null, msgType: null });
+    }, 5000);
     setNewName("");
     setNewNumber("");
   };
@@ -129,6 +174,7 @@ const App = () => {
     setNewNumber(e.target.value);
   };
 
+  //This throws error after person number is updated
   const handleSearchChange = (e) => {
     try {
       const foundPersons = persons.filter((person) =>
@@ -136,7 +182,7 @@ const App = () => {
       );
       setSearchResults(foundPersons);
     } catch (error) {
-      console.log("=== error App.js [105] === " + error);
+      console.log("=== error App.js [165] === " + error);
     }
   };
 
@@ -144,7 +190,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Filter handleChange={handleSearchChange} />
-      <Notification message={message}/>
+      <Notification message={message} />
       <h3>add a new</h3>
       <PersonForm
         addNewItem={addNewItem}

@@ -1,59 +1,24 @@
 {
-  "persons": [
-    {
-      "name": "Ada Lovelace",
+  "persons":[
+    { 
+      "name": "Arto Hellas", 
+      "number": "040-123456",
+      "id": 1
+    },
+    { 
+      "name": "Ada Lovelace", 
       "number": "39-44-5323523",
       "id": 2
     },
-    {
-      "name": "Dan Abramov",
+    { 
+      "name": "Dan Abramov", 
       "number": "12-43-234345",
       "id": 3
     },
-    {
-      "name": "Mary Poppendieck",
+    { 
+      "name": "Mary Poppendieck", 
       "number": "39-23-6423122",
       "id": 4
-    },
-    {
-      "name": "Freija Sipola",
-      "number": "45343",
-      "id": 5
-    },
-    {
-      "name": "Jaakko Mikkola",
-      "number": "98765",
-      "id": 8
-    },
-    {
-      "name": "Teppo Tuppu",
-      "number": "8768",
-      "id": 12
-    },
-    {
-      "name": "Taneli Töneli",
-      "number": "56342-672",
-      "id": 13
-    },
-    {
-      "name": "Jakke Jökkinen",
-      "number": "123",
-      "id": 15
-    },
-    {
-      "name": "Vanja Sipola",
-      "number": "9876556",
-      "id": 16
-    },
-    {
-      "name": "Kukko Kiekuu",
-      "number": "98767",
-      "id": 17
-    },
-    {
-      "name": "Kukko  Ukko",
-      "number": "876789",
-      "id": 18
     }
   ]
 }
