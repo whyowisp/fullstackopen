@@ -5,3 +5,6 @@ Content-Type: application/json
     "name": "Lokki Poika",
     "number": "050-123 4567"
 }
+
+###
+GET http://localhost:3001/api/persons
