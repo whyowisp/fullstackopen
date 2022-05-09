@@ -4,7 +4,7 @@ const express = require("express")
 const morgan = require('morgan')
 const cors = require('cors')
 const app = express()
-const Person = require('./models.person')
+const Person = require('./models/person')
 
 app.use(express.static('build'))
 app.use(express.json())
@@ -72,30 +72,21 @@ app.delete("/api/persons/:id", (request, response) => {
 })
 
 app.post("/api/persons", (request, response) => {
-  const newId = Math.floor(Math.random() * 1000)
+  console.log(request.body)
   const body = request.body
 
-  if (!body.name || !body.number) {
-    return response.status(400).json({
-      error: "content missing",
-    })
-  }
-  //Creates new array with names only and checks if it includes name in question
-  if (persons.map((person) => person.name).includes(body.name)) {
-    return response.status(400).json({
-      error: "name exists already",
-    })
+  if (body.name === undefined || body.number === undefined) {
+    return response.status(400).json({error: 'content missing'})
   }
 
-  const newPerson = {
-    id: newId,
+  const person = new Person({
     name: body.name,
-    number: body.number,
-  }
+    number: body.number
+  })
 
-  persons = persons.concat(newPerson)
-
-  response.json(newPerson)
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
 })
 
 const PORT = process.env.PORT
