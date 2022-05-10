@@ -8,6 +8,18 @@ POST http://localhost:3001/api/persons/
 Content-Type: application/json
 
 {
-    "name": "Joiku Poika",
-    "number": "050-123 4567"
+    "name": "Lokki Poika",
+    "number": "050-123 2222"
+}
+
+###
+DELETE http://localhost:3001/api/persons/6278d800024227dded8a2ab1
+
+###
+PUT http://localhost:3001/api/persons/627a675c9426b5a22aa8fbca
+Content-Type: application/json
+
+{
+    "name": "Lokki Poika",
+    "number": "050-123 1111"
 }
