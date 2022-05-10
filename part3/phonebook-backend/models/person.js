@@ -12,6 +12,7 @@ mongoose.connect(url)
     console.log('error connecting to MongoDB:', error.message)
   })
 
+//Person model
 const personSchema = new mongoose.Schema({
   name: String,
   number: String,

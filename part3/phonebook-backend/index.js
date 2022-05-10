@@ -18,9 +18,9 @@ morgan.token("resBody", (req, res) => {
 app.use(morgan(":resBody"))
 
 app.get("/info", (request, response) => {
-  response.send(
-    `Phonebook has info for ${persons.length} people <br> ${new Date()}`
-  )
+  Person.estimatedDocumentCount().then((dbSize) => {
+    response.send(`Phonebook has info for ${dbSize} people <br> ${new Date()}`)
+  })
 })
 
 app.get("/api/persons", (request, response) => {
@@ -79,7 +79,7 @@ app.post("/api/persons", (request, response) => {
     .catch((error) => next(error))
 })
 
-app.put('/api/persons/:id', (request, response, next) => {
+app.put("/api/persons/:id", (request, response, next) => {
   const id = request.params.id
   const body = request.body
 
