@@ -18,7 +18,7 @@ morgan.token(
 );
 app.use(morgan(':resBody'))
 
-let persons = [
+/*let persons = [
   {
     id: 1,
     name: "Arto Hellas",
@@ -39,7 +39,7 @@ let persons = [
     name: "Mary Poppendieck",
     number: "39-23-6423122",
   },
-]
+]*/
 
 app.get("/api/persons", (request, response) => {
   Person.find({}).then(notes => {
@@ -64,12 +64,14 @@ app.get("/api/persons/:id", (request, response) => {
   }
 })
 
-app.delete("/api/persons/:id", (request, response) => {
-  const id = Number(request.params.id)
-  persons = persons.filter((person) => person.id !== id)
+app.delete("/api/persons/:id", (request, response, next) => {
+  const id = request.params.id
 
-  response.status(202).end()
-})
+  Person.findByIdAndRemove(id)
+    .then(result => {
+      response.status(204).end()
+    })
+  })
 
 app.post("/api/persons", (request, response) => {
   console.log(request.body)
