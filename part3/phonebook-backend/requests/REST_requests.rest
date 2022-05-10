@@ -1,0 +1,13 @@
+GET http://localhost:3001/api/persons/6278d800024227dded8a2ab6
+
+###
+GET http://localhost:3001/api/persons/
+
+###
+POST http://localhost:3001/api/persons/
+Content-Type: application/json
+
+{
+    "name": "Joiku Poika",
+    "number": "050-123 4567"
+}
