@@ -155,6 +155,13 @@ const App = () => {
           msg: `${dataReturned.name} added to the phonebook`,
           msgType: "success",
         });
+      })
+      .catch(error => {
+        console.log('the message: ' + `${error.response.data}`);
+        setMessage({
+          msg: `${error.response.data}`,
+          msgType: "error"
+        })
       });
     }
 
