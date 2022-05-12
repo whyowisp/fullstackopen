@@ -17,6 +17,8 @@ morgan.token("resBody", (req, res) => {
 })
 app.use(morgan(":resBody"))
 
+//Database use functions
+
 app.get("/info", (request, response) => {
   Person.estimatedDocumentCount().then((dbSize) => {
     response.send(`Phonebook has info for ${dbSize} people <br> ${new Date()}`)
@@ -62,17 +64,26 @@ app.delete("/api/persons/:id", (request, response, next) => {
 app.post("/api/persons", (request, response, next) => {
   const body = request.body
 
-  const person = new Person({
-    name: body.name,
-    number: body.number,
-  })
+  Person.exists({ name: request.body.name }).then((result) => {
+    if (result === null) {
 
-  person
-    .save()
-    .then((savedPerson) => {
-      response.json(savedPerson)
-    })
-    .catch((error) => next(error))
+      const person = new Person({
+        name: body.name,
+        number: body.number,
+      })
+
+      person
+        .save()
+        .then((savedPerson) => {
+          console.log(savedPerson + " saved to database")
+          response.json(savedPerson)
+        })
+        .catch((error) => next(error))
+
+    } else {
+      response.status(400).send({ error: 'Person you are trying to add exists already'})
+    }
+  })
 })
 
 app.put("/api/persons/:id", (request, response, next) => {
@@ -87,20 +98,18 @@ app.put("/api/persons/:id", (request, response, next) => {
     .then((updatedPerson) => {
       response.json(updatedPerson)
     })
-    .catch(error => next(error))
+    .catch((error) => next(error))
 })
+
+//Error handling
 
 const errorHandler = (error, request, response, next) => {
   console.log(error.message)
 
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" })
-
   } else if (error.name === "ValidationError") {
-    return response
-      .status(400)
-      .send(error.message)
-      
+    return response.status(400).send(error.message)
   } else if (error.name === "DocumentNotFoundError") {
     return response
       .status(404)
@@ -108,6 +117,7 @@ const errorHandler = (error, request, response, next) => {
   }
   next(error)
 }
+
 //Remember to use this as last middleware
 app.use(errorHandler)
 
