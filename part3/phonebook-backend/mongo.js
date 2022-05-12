@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require('mongoose')
 
 const password = process.argv[2]
 const url = `mongodb+srv://username:${password}@cluster0.lf1wd.mongodb.net/personApp?retryWrites=true&w=majority`
@@ -7,10 +7,10 @@ mongoose.connect(url)
 //Handle short argument length
 if (process.argv.length < 3) {
   console.log(
-    "Please provide the password as an argument: node mongo.js <password> to get all data from db \n or node mongo.js <passwod> <name> <phonenumber> to add new item.>"
+    'Please provide the password as an argument: node mongo.js <password> to get all data from db \n or node mongo.js <passwod> <name> <phonenumber> to add new item.>'
   )
   process.exit(1)
-} 
+}
 
 
 //Handle ok argument lengths...
@@ -20,11 +20,11 @@ const personSchema = new mongoose.Schema({
   number: String,
 })
 
-const Person = mongoose.model("Person", personSchema)
+const Person = mongoose.model('Person', personSchema)
 
 // ..find all
 if (process.argv.length === 3) {
-  console.log('Phonebook:');
+  console.log('Phonebook:')
   Person.find({}).then((result) => {
     result.forEach((person) => {
       console.log(person.name + ' ' + person.number)
@@ -44,7 +44,7 @@ if (process.argv.length === 3) {
   })
 
   person.save().then((result) => {
-    console.log(result + " saved to database")
+    console.log(result + ' saved to database')
     mongoose.connection.close()
   })
 }
