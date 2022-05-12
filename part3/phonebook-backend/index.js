@@ -17,6 +17,7 @@ morgan.token("resBody", (req, res) => {
 })
 app.use(morgan(":resBody"))
 
+
 //Database use functions
 
 app.get("/info", (request, response) => {
