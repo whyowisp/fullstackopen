@@ -61,6 +61,14 @@ const blogs = [
     __v: 0
   }
 ]
+const maxLikesDummy = {
+  _id: '5a422b3a1b54a676234d17f9',
+  title: 'Canonical string reduction',
+  author: 'Edsger W. Dijkstra',
+  url: 'http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html',
+  likes: 12,
+  __v: 0
+}
 
 //Tests
 describe('total likes', () => {
@@ -73,7 +81,13 @@ describe('total likes', () => {
     const result = listHelper.totalLikes(blogs)
     expect(result).toBe(36)
   })
+  test('when list has many blogs, equals max likes of that', () => {
+    const result = listHelper.findBlogWithMaxLikes(blogs)
+    expect(result).toEqual(maxLikesDummy)
+  })
 })
+
+/*
 describe('dummy tests', () => {
   test('dummy returns one', () => {
     const blogs = []
@@ -82,3 +96,4 @@ describe('dummy tests', () => {
     expect(result).toBe(1)
   })
 })
+*/
