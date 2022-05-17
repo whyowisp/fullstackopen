@@ -71,6 +71,43 @@ describe ('API tests', () => {
     const blogsAfterUpdate = await helper.blogsInDb()
     expect(blogsAfterUpdate).toHaveLength(helper.initialBlogs.length + 1)
   })
+
+  test('new blog post is added to the database', async () => {
+    const newBlog = {
+      title: 'Askeettisesti ja vähällä ravinnolla',
+      author: 'Arttu \"Nälkäkurki\" Kurkinen',
+      url: 'https://sitajatata/jutut/askeettisesti',
+      likes: 3
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAfterUpdate = await helper.blogsInDb()
+    expect(blogsAfterUpdate).toHaveLength(helper.initialBlogs.length + 1)
+
+    const blogTitles = blogsAfterUpdate.map(blog => blog.title)
+    expect(blogTitles).toContain('Askeettisesti ja vähällä ravinnolla')
+  })
+
+  test('if title and url properties are missing, responds 400', async () => {
+    const invalidBlogPost = {
+      author: 'Arttu \"Nälkäkurki\" Kurkinen',
+      likes: 5
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(invalidBlogPost)
+      .expect(400) //Bad request
+
+    //Reassurance
+    const blogsAfterUpdate = await helper.blogsInDb()
+    expect(blogsAfterUpdate).toHaveLength(helper.initialBlogs.length)
+  })
 })
 
 afterAll(() => {
