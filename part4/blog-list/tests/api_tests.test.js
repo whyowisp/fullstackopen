@@ -33,6 +33,10 @@ describe ('API tests', () => {
     expect(response.body).toHaveLength(helper.initialBlogs.length)
   })
 
+  test('', async () => {
+
+  })
+
 })
 
 afterAll(() => {
