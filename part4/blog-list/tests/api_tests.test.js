@@ -54,6 +54,23 @@ describe ('API tests', () => {
     expect(blogTitles).toContain('Askeettisesti ja vähällä ravinnolla')
   })
 
+  test('if likes property is missing, defaults to 0', async () => {
+    const invalidBlogPost = {
+      title: 'Askeettisesti ja vähällä ravinnolla',
+      author: 'Arttu \"Nälkäkurki\" Kurkinen',
+      url: 'https://sitajatata/jutut/askeettisesti',
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(invalidBlogPost)
+      .expect(201) //Created
+      .expect('Content-Type', /application\/json/)
+
+    //Reassurance
+    const blogsAfterUpdate = await helper.blogsInDb()
+    expect(blogsAfterUpdate).toHaveLength(helper.initialBlogs.length + 1)
+  })
 })
 
 afterAll(() => {
