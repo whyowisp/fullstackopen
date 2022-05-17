@@ -11,6 +11,7 @@ blogsRouter.post('/', async (request, response) => {
 
   if (!blog.title || !blog.url) {
     response.status(400).end()
+    return
   }
 
   blog.likes ? blog : blog.likes = 0
