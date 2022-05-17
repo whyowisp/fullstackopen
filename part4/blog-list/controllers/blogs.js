@@ -6,14 +6,12 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs)
 })
 
-blogsRouter.post('/', (request, response) => {
+blogsRouter.post('/', async (request, response) => {
   const blog = new Blog(request.body)
 
-  blog
-    .save()
-    .then(result => {
-      response.status(201).json(result)
-    }) //oops we don´t have error handlers yet -> .catch(error => next(error))
+  const savedBlog = await blog.save()
+  response.status(201).json(savedBlog)
+  //And the error handling is now executed by express-async-errors library
 })
 
 module.exports = blogsRouter

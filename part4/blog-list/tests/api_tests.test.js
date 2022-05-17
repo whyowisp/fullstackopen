@@ -33,8 +33,25 @@ describe ('API tests', () => {
     expect(response.body).toHaveLength(helper.initialBlogs.length)
   })
 
-  test('', async () => {
+  test('new blog post is added to the database', async () => {
+    const newBlog = {
+      title: 'Askeettisesti ja vähällä ravinnolla',
+      author: 'Arttu \"Nälkäkurki\" Kurkinen',
+      url: 'https://sitajatata/jutut/askeettisesti',
+      likes: 3
+    }
 
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAfterUpdate = await helper.blogsInDb()
+    expect(blogsAfterUpdate).toHaveLength(helper.initialBlogs.length + 1)
+
+    const blogTitles = blogsAfterUpdate.map(blog => blog.title)
+    expect(blogTitles).toContain('Askeettisesti ja vähällä ravinnolla')
   })
 
 })
