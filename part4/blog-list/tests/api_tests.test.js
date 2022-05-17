@@ -19,11 +19,20 @@ beforeEach(async () => {
   await Promise.all(promiseArray)
 })
 
-describe ('API GET tests', () => {
+describe ('API tests', () => {
+  test('blog identifier property is named as\"id\"', async () => {
+    const blog = await Blog.findOne({})
+
+    //document -> schema -> path names -> _id object -> _id path name
+    const blogPathName = blog.schema.paths._id.path.toString()
+    expect(blogPathName).toBe('_id')
+  })
+
   test('all blogs are returned', async () => {
     const response = await api.get('/api/blogs')
     expect(response.body).toHaveLength(helper.initialBlogs.length)
   })
+
 })
 
 afterAll(() => {

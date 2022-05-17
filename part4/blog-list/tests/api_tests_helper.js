@@ -57,7 +57,16 @@ const blogsInDb = async () => {
   return blogs.map(blog => blog.toJSON())
 }
 
+const propertyIdName = async () => {
+  //Note to self: blog is a mongoose document...
+  const blog = await Blog.findOne({})
+  //... doc -> schema -> path names -> _id (which is the actual id) -> _id path name
+  const blogPathName = blog.schema.paths._id.path
+  return blogPathName
+}
+
 module.exports = {
   initialBlogs,
-  blogsInDb
+  blogsInDb,
+  propertyIdName
 }
