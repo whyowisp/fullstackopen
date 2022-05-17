@@ -1,8 +1,9 @@
+/* eslint-disable no-useless-escape */
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
-const helper = require('./api_tests_helper')
+const helper = require('../utils/api_tests_helper')
 
 const api = supertest(app)
 
@@ -19,7 +20,7 @@ beforeEach(async () => {
   await Promise.all(promiseArray)
 })
 
-describe ('API tests', () => {
+describe('GET tests', () => {
   test('blog identifier property is named as\"id\"', async () => {
     const blog = await Blog.findOne({})
 
@@ -32,7 +33,9 @@ describe ('API tests', () => {
     const response = await api.get('/api/blogs')
     expect(response.body).toHaveLength(helper.initialBlogs.length)
   })
+})
 
+describe('POST tests', () => {
   test('new blog post is added to the database', async () => {
     const newBlog = {
       title: 'Askeettisesti ja vähällä ravinnolla',
@@ -107,6 +110,15 @@ describe ('API tests', () => {
     //Reassurance
     const blogsAfterUpdate = await helper.blogsInDb()
     expect(blogsAfterUpdate).toHaveLength(helper.initialBlogs.length)
+  })
+})
+
+describe('DELETE tests', () => {
+  test('deletion of a blog', async () => {
+    const blogId = await helper.getId()
+    await api
+      .delete(`/api/blogs/${blogId}`)
+      .expect(204)
   })
 })
 

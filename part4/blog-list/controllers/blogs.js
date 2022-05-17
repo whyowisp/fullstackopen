@@ -21,4 +21,9 @@ blogsRouter.post('/', async (request, response) => {
   //the error handling is now executed by express-async-errors library
 })
 
+blogsRouter.delete('/:id', async (request, response) => {
+  await Blog.findByIdAndRemove(request.params.id)
+  response.status(204).end()
+})
+
 module.exports = blogsRouter
