@@ -122,6 +122,21 @@ describe('DELETE tests', () => {
   })
 })
 
+describe('PUT tests', () => {
+  test('blog post property \'likes\' is updated', async () => {
+    const blogId = '5a422a851b54a676234d17f7'
+    const updateObject = { likes: 23 }
+
+    await api
+      .put(`/api/blogs/${blogId}`)
+      .send(updateObject)
+      .expect(200) //Ok
+
+    const blogAfterUpdate = await Blog.findById('5a422a851b54a676234d17f7')
+    expect(blogAfterUpdate.likes).toBe(23)
+  })
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
