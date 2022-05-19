@@ -1,26 +1,29 @@
 /* eslint-disable no-useless-escape */
+const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const helper = require('../utils/api_tests_helper')
 
 const api = supertest(app)
 
-beforeEach(async () => {
-  //Clear old test data
-  await Blog.deleteMany({})
-
-  //Array of initial blogs mapped as mongoose Blog objects
-  const blogObjects = helper.initialBlogs
-    .map(blog => new Blog(blog))
-  //Array consisting promises returned from each mongoose save
-  const promiseArray = blogObjects.map(blog => blog.save())
-  //Paraller execution of promises
-  await Promise.all(promiseArray)
-})
-
 describe('GET tests', () => {
+
+  beforeEach(async () => {
+    //Clear old test data
+    await Blog.deleteMany({})
+
+    //Array of initial blogs mapped as mongoose Blog objects
+    const blogObjects = helper.initialBlogs
+      .map(blog => new Blog(blog))
+    //Array consisting promises returned from each mongoose save
+    const promiseArray = blogObjects.map(blog => blog.save())
+    //Paraller execution of promises
+    await Promise.all(promiseArray)
+  })
+
   test('blog identifier property is named as\"id\"', async () => {
     const blog = await Blog.findOne({})
 
@@ -134,6 +137,41 @@ describe('PUT tests', () => {
 
     const blogAfterUpdate = await Blog.findById('5a422a851b54a676234d17f7')
     expect(blogAfterUpdate.likes).toBe(23)
+  })
+})
+
+
+//tests for users api
+describe('when there is initially one user in db', () => {
+  beforeEach(async () => {
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash('sekret', 10)
+    const user = new User({ username: 'root', passwordHash })
+
+    await user.save()
+  })
+
+  test('creation succeeds with a fresh username', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'jokunen',
+      name: 'Jaska Jokunen',
+      password: 'salainen',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
+
+    const usernames = usersAtEnd.map(u => u.username)
+    expect(usernames).toContain(newUser.username)
   })
 })
 
