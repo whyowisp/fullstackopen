@@ -3,8 +3,13 @@ const mongoose = require('mongoose')
 const blogSchema = new mongoose.Schema({
   title: String,
   author: String,
+  user:
+  {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
   url: String,
-  likes: Number
+  likes: Number,
 })
 
 //This might be valuable later
@@ -15,7 +20,7 @@ blogSchema.set('toJSON', {
     //We will not need original _id, neither _v
     delete returnedObject._id
     delete returnedObject._v
-  }
+  },
 })
 
 const Blog = mongoose.model('Blog', blogSchema)
