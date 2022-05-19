@@ -173,6 +173,32 @@ describe('when there is initially one user in db', () => {
     const usernames = usersAtEnd.map(u => u.username)
     expect(usernames).toContain(newUser.username)
   })
+
+  test('user created with too short password returns 400', async () => {
+    const shortPasswordUser = {
+      username: 'jokunen',
+      name: 'Jaska Jokunen',
+      password: 'sa',
+    }
+
+    await api
+      .post('/api/users')
+      .send(shortPasswordUser)
+      .expect(400)
+  })
+
+  test('user created with too short username returns 400', async () => {
+    const shortUsernameUser = {
+      username: 'jj',
+      name: 'Jaska Jokunen',
+      password: 'salasana',
+    }
+
+    await api
+      .post('/api/users')
+      .send(shortUsernameUser)
+      .expect(400)
+  })
 })
 
 afterAll(() => {

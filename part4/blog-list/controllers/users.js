@@ -10,6 +10,18 @@ usersRouter.get('/', async (request, response) => {
 usersRouter.post('/', async (request, response) => {
   const { username, name, password } = request.body
 
+  //Validation check for invalid password length
+  if (password.length < 3) {
+    return response.status(400).json({
+      error: 'invalid password length'
+    })
+  }
+  //check for too short username
+  if (username.length < 3) {
+    return response.status(400).json({
+      error: 'invalid username length'
+    })
+  }
   //Check to prevent username doubles in db
   const existingUser = await User.findOne({ username })
   if (existingUser) {
