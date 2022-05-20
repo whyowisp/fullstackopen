@@ -3,12 +3,28 @@ GET http://localhost:3003/api/blogs
 ###
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRva2VudGVzdGVyIiwiaWQiOiI2Mjg3MzYwMjFhZDAzODMxOGQ5OTRkODkiLCJpYXQiOjE2NTMwMzU5MTF9.dQwJki7CyAMheE1L1TTmpnxEnhlAcMjosF_yh7CmUqI
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRva2VudGVzdGVyIiwiaWQiOiI2Mjg3ODBiYTM0MDU3Mzg4M2FkM2NkOTMiLCJpYXQiOjE2NTMwNDc1MDN9.R6Rt-khU5Wum7kCQS1XGBDMeUOnQCSp-oJSPraWlQjM
 
 {
-  "userId": "628736021ad038318d994d89",
-  "title": "Kanooninen jotain jotain",
+  "userId": "628780ba340573883ad3cd93",
+  "title": "Krooninen sitä ja tätä",
   "author": "Ettu V. Tiihonen",
   "url": "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
-  "likes": 999
+  "likes": 1
 }
+
+###
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: bearer
+
+//Warning! this deletes all blogs
+###
+DELETE http://localhost:3003/api/blogs
+
+###
+DELETE http://localhost:3003/api/blogs/62879ad2a7ebe40848300dc8
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRva2VudGVzdGVyIiwiaWQiOiI2Mjg3ODBiYTM0MDU3Mzg4M2FkM2NkOTMiLCJpYXQiOjE2NTMwNDc1MDN9.R6Rt-khU5Wum7kCQS1XGBDMeUOnQCSp-oJSPraWlQjM
+
+###
+DELETE http://localhost:3003/api/blogs/6287815a340573883ad3cda5
