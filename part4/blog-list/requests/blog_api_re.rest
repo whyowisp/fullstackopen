@@ -3,11 +3,12 @@ GET http://localhost:3003/api/blogs
 ###
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRva2VudGVzdGVyIiwiaWQiOiI2Mjg3MzYwMjFhZDAzODMxOGQ5OTRkODkiLCJpYXQiOjE2NTMwMzU5MTF9.dQwJki7CyAMheE1L1TTmpnxEnhlAcMjosF_yh7CmUqI
 
 {
-  "userId": "62864964218e04b632d0b779",
-  "title": "Canonical string reduction",
-  "author": "Edsger W. Dijkstra",
+  "userId": "628736021ad038318d994d89",
+  "title": "Kanooninen jotain jotain",
+  "author": "Ettu V. Tiihonen",
   "url": "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
-  "likes": 12
+  "likes": 999
 }
