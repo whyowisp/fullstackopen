@@ -66,7 +66,7 @@ blogsRouter.delete('/:id', async (request, response) => {
 })
 
 //Clear db
-blogsRouter.delete('/', async (request, response) => {
+blogsRouter.delete('/', async () => {
   await Blog.deleteMany({})
 })
 
