@@ -48,4 +48,8 @@ usersRouter.post('/', async (request, response) => {
   response.status(201).json(savedUser)
 })
 
+usersRouter.delete('/', async (request, response) => {
+  User.deleteMany({})
+})
+
 module.exports = usersRouter

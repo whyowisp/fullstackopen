@@ -13,9 +13,6 @@ blogsRouter.post('/', async (request, response) => {
 
   //Verification of the request.token (extracted by tokenExtractor middleware)
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token missing or invalid' })
-  }
 
   //We need user object at the end of post function
   const user = await User.findById(decodedToken.id)
@@ -45,8 +42,32 @@ blogsRouter.post('/', async (request, response) => {
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
-  await Blog.findByIdAndRemove(request.params.id)
+  const toBeDeletedId = request.params.id
+
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+
+  const blog = await Blog.findById(toBeDeletedId)
+
+  //Check if blog not exists OR blog user doesn´t match with user token
+  if (!blog || blog.user.toString() !== decodedToken.id.toString()) {
+    return response.status(400).end()
+  }
+
+  //Remove blog from blogs db
+  await Blog.findByIdAndRemove(toBeDeletedId)
+  response.status(204)
+
+  //Remove blog from user at users db
+  const user = await User.findById(decodedToken.id)
+  //return array of blog id objects not including blog id object which was deleted
+  user.blogs = user.blogs.filter(blog => blog._id !== toBeDeletedId)
+  await user.save()
   response.status(204).end()
+})
+
+//Clear db
+blogsRouter.delete('/', async (request, response) => {
+  await Blog.deleteMany({})
 })
 
 blogsRouter.put('/:id', async (request, response) => {
