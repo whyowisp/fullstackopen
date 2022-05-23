@@ -1,7 +1,5 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
-const jwt = require('jsonwebtoken')
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
@@ -11,11 +9,9 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/', async (request, response) => {
   const body = request.body
 
-  //Verification of the request.token (extracted by tokenExtractor middleware)
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-
-  //We need user object at the end of post function
-  const user = await User.findById(decodedToken.id)
+  //request.user defined by userExtractor() -middleware
+  //At this point user is already verified
+  const user = request.user
 
   if (!body.title || !body.url) {
     response.status(400).end()
@@ -43,14 +39,16 @@ blogsRouter.post('/', async (request, response) => {
 
 blogsRouter.delete('/:id', async (request, response) => {
   const toBeDeletedId = request.params.id
-
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-
+  const user = request.user //User is verified already by middleware
   const blog = await Blog.findById(toBeDeletedId)
 
-  //Check if blog not exists OR blog user doesn´t match with user token
-  if (!blog || blog.user.toString() !== decodedToken.id.toString()) {
-    return response.status(400).end()
+  //Check if blog exists
+  if (!blog) {
+    return response.status(400).end() //Bad request
+  }
+  //Check that user is owner of that blog
+  if (blog.user.toString() !== user._id.toString()) {
+    return response.status(403).end() //Forbidden
   }
 
   //Remove blog from blogs db
@@ -58,9 +56,8 @@ blogsRouter.delete('/:id', async (request, response) => {
   response.status(204)
 
   //Remove blog from user at users db
-  const user = await User.findById(decodedToken.id)
   //return array of blog id objects not including blog id object which was deleted
-  user.blogs = user.blogs.filter(blog => blog._id !== toBeDeletedId)
+  user.blogs = user.blogs.filter(blog => blog._id.toString() !== toBeDeletedId)
   await user.save()
   response.status(204).end()
 })
