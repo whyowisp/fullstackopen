@@ -83,7 +83,7 @@ describe('total likes', () => {
     expect(result).toBe(36)
   })
   test('when list has many blogs, equals max likes of that', () => {
-    const result = listHelper.findBlogWithMaxLikes(blogs)
+    const result = listHelper.favoriteBlogs(blogs)
     expect(result).toEqual(maxLikesDummy)
   })
 })
