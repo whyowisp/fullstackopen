@@ -15,13 +15,14 @@ describe('GET tests', () => {
     //Clear old test data
     await Blog.deleteMany({})
 
+    /*
     //Array of initial blogs mapped as mongoose Blog objects
     const blogObjects = helper.initialBlogs
       .map(blog => new Blog(blog))
     //Array consisting promises returned from each mongoose save
     const promiseArray = blogObjects.map(blog => blog.save())
     //Paraller execution of promises
-    await Promise.all(promiseArray)
+    await Promise.all(promiseArray)*/
   })
 
   test('blog identifier property is named as\"id\"', async () => {
@@ -38,83 +39,7 @@ describe('GET tests', () => {
   })
 })
 
-describe('POST tests', () => {
-  test('new blog post is added to the database', async () => {
-    const newBlog = {
-      title: 'Askeettisesti ja vähällä ravinnolla',
-      author: 'Arttu \"Nälkäkurki\" Kurkinen',
-      url: 'https://sitajatata/jutut/askeettisesti',
-      likes: 3
-    }
 
-    await api
-      .post('/api/blogs')
-      .send(newBlog)
-      .expect(201)
-      .expect('Content-Type', /application\/json/)
-
-    const blogsAfterUpdate = await helper.blogsInDb()
-    expect(blogsAfterUpdate).toHaveLength(helper.initialBlogs.length + 1)
-
-    const blogTitles = blogsAfterUpdate.map(blog => blog.title)
-    expect(blogTitles).toContain('Askeettisesti ja vähällä ravinnolla')
-  })
-
-  test('if likes property is missing, defaults to 0', async () => {
-    const invalidBlogPost = {
-      title: 'Askeettisesti ja vähällä ravinnolla',
-      author: 'Arttu \"Nälkäkurki\" Kurkinen',
-      url: 'https://sitajatata/jutut/askeettisesti',
-    }
-
-    await api
-      .post('/api/blogs')
-      .send(invalidBlogPost)
-      .expect(201) //Created
-      .expect('Content-Type', /application\/json/)
-
-    //Reassurance
-    const blogsAfterUpdate = await helper.blogsInDb()
-    expect(blogsAfterUpdate).toHaveLength(helper.initialBlogs.length + 1)
-  })
-
-  test('new blog post is added to the database', async () => {
-    const newBlog = {
-      title: 'Askeettisesti ja vähällä ravinnolla',
-      author: 'Arttu \"Nälkäkurki\" Kurkinen',
-      url: 'https://sitajatata/jutut/askeettisesti',
-      likes: 3
-    }
-
-    await api
-      .post('/api/blogs')
-      .send(newBlog)
-      .expect(201)
-      .expect('Content-Type', /application\/json/)
-
-    const blogsAfterUpdate = await helper.blogsInDb()
-    expect(blogsAfterUpdate).toHaveLength(helper.initialBlogs.length + 1)
-
-    const blogTitles = blogsAfterUpdate.map(blog => blog.title)
-    expect(blogTitles).toContain('Askeettisesti ja vähällä ravinnolla')
-  })
-
-  test('if title and url properties are missing, responds 400', async () => {
-    const invalidBlogPost = {
-      author: 'Arttu \"Nälkäkurki\" Kurkinen',
-      likes: 5
-    }
-
-    await api
-      .post('/api/blogs')
-      .send(invalidBlogPost)
-      .expect(400) //Bad request
-
-    //Reassurance
-    const blogsAfterUpdate = await helper.blogsInDb()
-    expect(blogsAfterUpdate).toHaveLength(helper.initialBlogs.length)
-  })
-})
 
 describe('DELETE tests', () => {
   test('deletion of a blog', async () => {

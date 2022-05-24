@@ -13,14 +13,17 @@ const requestLogger = (request, response, next) => {
 }
 
 const userExtractor = async (request, response, next) => {
-  //CHECK this on monday
   const authorization = request.get('authorization')
   if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
     const token = authorization.substring(7)
 
     const decodedToken = jwt.verify(token, process.env.SECRET)
-    logger.info(decodedToken)
+    if (!decodedToken) {
+      return response.status(401).json({ error: 'token invalid' })
+    }
     request.user = await User.findById(decodedToken.id)
+  } else {
+    return response.status(401).json({ error: 'token missing' })
   }
   next()
 }

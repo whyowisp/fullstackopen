@@ -10,7 +10,7 @@ blogsRouter.post('/', async (request, response) => {
   const body = request.body
 
   //request.user defined by userExtractor() -middleware
-  //At this point user is already verified
+  //After this point user is already verified
   const user = request.user
 
   if (!body.title || !body.url) {
