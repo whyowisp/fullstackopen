@@ -15,14 +15,13 @@ describe('GET tests', () => {
     //Clear old test data
     await Blog.deleteMany({})
 
-    /*
     //Array of initial blogs mapped as mongoose Blog objects
     const blogObjects = helper.initialBlogs
       .map(blog => new Blog(blog))
     //Array consisting promises returned from each mongoose save
     const promiseArray = blogObjects.map(blog => blog.save())
     //Paraller execution of promises
-    await Promise.all(promiseArray)*/
+    await Promise.all(promiseArray)
   })
 
   test('blog identifier property is named as\"id\"', async () => {
@@ -39,7 +38,7 @@ describe('GET tests', () => {
   })
 })
 
-
+//POST tests moved in post_tests.test.js file
 
 describe('DELETE tests', () => {
   test('deletion of a blog', async () => {

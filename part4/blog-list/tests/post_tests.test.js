@@ -1,8 +1,10 @@
 /* eslint-disable no-useless-escape */
+
+//In this file is completion of exercise 4.23
+
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
-const { response } = require('../app')
 const app = require('../app')
 const Blog = require('../models/blog')
 const User = require('../models/user')
