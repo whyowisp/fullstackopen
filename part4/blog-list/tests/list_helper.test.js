@@ -70,6 +70,10 @@ const maxLikesDummy = {
   likes: 12,
   __v: 0
 }
+const mostLikesDummy = {
+  author: "Edsger W. Dijkstra",
+  likes: 17
+}
 
 const mostBlogsDummy = {
   author: "Robert C. Martin",
@@ -94,6 +98,10 @@ describe('total likes', () => {
   test('list with many blogs equals author of most blogs', () => {
     const result = listHelper.mostBlogs(blogs)
     expect(result).toEqual(mostBlogsDummy)
+  })
+  test('list with many blogs equals author of most blogs', () => {
+    const result = listHelper.mostLikes(blogs)
+    expect(result).toEqual(mostLikesDummy)
   })
 })
 
