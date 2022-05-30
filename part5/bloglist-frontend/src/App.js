@@ -3,6 +3,67 @@ import Blog from "./components/Blog"
 import blogService from "./services/blogs"
 import loginService from "./services/login"
 
+const CreateBlogForm = ({ loadBlogs }) => {
+  const [title, setTitle] = useState("")
+  const [author, setAuthor] = useState("")
+  const [url, setUrl] = useState("")
+
+  const handleNewBlog = async (event) => {
+    event.preventDefault()
+
+    const newBlog = {
+      title: title,
+      author: author,
+      url: url,
+    }
+
+    await blogService
+      .createNew(newBlog)
+      .then((response) => console.log(response))
+      .catch((error) => {
+        console.log("creating new object failed: " + error.response.data)
+      })
+
+    setTitle("")
+    setAuthor("")
+    setUrl("")
+    loadBlogs()
+  }
+
+  return (
+    <form onSubmit={handleNewBlog}>
+      <div>
+        title:
+        <input
+          type="text"
+          value={title}
+          name="Title"
+          onChange={({ target }) => setTitle(target.value)}
+        />
+      </div>
+      <div>
+        author:
+        <input
+          type="text"
+          value={author}
+          name="Author"
+          onChange={({ target }) => setAuthor(target.value)}
+        />
+      </div>
+      <div>
+        url:
+        <input
+          type="text"
+          value={url}
+          name="Url"
+          onChange={({ target }) => setUrl(target.value)}
+        />
+      </div>
+      <button type="submit">Create</button>
+    </form>
+  )
+}
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState("")
@@ -55,15 +116,12 @@ const App = () => {
     }
   }
 
-  const handleClick = (event) => {
+  const handleLogoutClick = (event) => {
     event.preventDefault()
     console.log(user.name + " logged out")
     window.localStorage.removeItem("loggedBlogappUser")
 
     setUser(null)
-    //user is still in memory right after clearing. Though on next round -> undefined. 
-    //Maybe setUser() takes little longer than console.log to run and that´s why the result
-    console.log(user)
   }
 
   if (user === null) {
@@ -101,9 +159,10 @@ const App = () => {
       <h2>blogs</h2>
       <div>
         Logged in as <b>{user.name} </b>
-        <button onClick={(event) => handleClick(event)}>Logout</button>
+        <button onClick={(event) => handleLogoutClick(event)}>Logout</button>
       </div>
       <br></br>
+      <CreateBlogForm loadBlogs={loadBlogs} />
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}
