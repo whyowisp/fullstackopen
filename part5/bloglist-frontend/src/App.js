@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react"
 import Blog from "./components/Blog"
+import CreateBlogForm from "./components/CreateBlogForm"
+import Notification from "./components/Notification"
+import Togglable from "./components/Togglable"
+
 import blogService from "./services/blogs"
 import loginService from "./services/login"
-import { CreateBlogForm } from "./components/NewBlog"
-import { Notification } from "./components/Notification"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -111,11 +113,13 @@ const App = () => {
         <button onClick={(event) => handleLogoutClick(event)}>Logout</button>
       </div>
       <br></br>
-      <CreateBlogForm
-        loadBlogs={loadBlogs}
-        setMessage={setMessage}
-        setMessageType={setMessageType}
-      />
+      <Togglable buttonLabel="New blog">
+        <CreateBlogForm
+          loadBlogs={loadBlogs}
+          setMessage={setMessage}
+          setMessageType={setMessageType}
+        />
+      </Togglable>
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}

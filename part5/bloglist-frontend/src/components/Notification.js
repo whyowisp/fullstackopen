@@ -1,4 +1,4 @@
-export const Notification = ({ message, messageType }) => {
+const Notification = ({ message, messageType }) => {
   //Styles source: https://codeconvey.com/error-message-css-style-example/
   const baseStyle = {
     border: "1px solid",
@@ -25,3 +25,5 @@ export const Notification = ({ message, messageType }) => {
     return <div style={{ ...baseStyle, ...okStyle }}>{message}</div>
   else return null
 }
+
+export default Notification
