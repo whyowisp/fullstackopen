@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import Blog from "./components/Blog"
 import CreateBlogForm from "./components/CreateBlogForm"
 import Notification from "./components/Notification"
@@ -14,6 +14,8 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
   const [messageType, setMessageType] = useState(null) // set to "error" or "ok" (use atoms?)
+
+  const blogRef = useRef()
 
   //Clear notification box automatically
   useEffect(() => {
@@ -121,7 +123,7 @@ const App = () => {
         />
       </Togglable>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} ref={blogRef} />
       ))}
     </div>
   )
