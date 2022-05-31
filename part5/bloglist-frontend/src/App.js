@@ -2,73 +2,24 @@ import { useState, useEffect } from "react"
 import Blog from "./components/Blog"
 import blogService from "./services/blogs"
 import loginService from "./services/login"
-
-const CreateBlogForm = ({ loadBlogs }) => {
-  const [title, setTitle] = useState("")
-  const [author, setAuthor] = useState("")
-  const [url, setUrl] = useState("")
-
-  const handleNewBlog = async (event) => {
-    event.preventDefault()
-
-    const newBlog = {
-      title: title,
-      author: author,
-      url: url,
-    }
-
-    await blogService
-      .createNew(newBlog)
-      .then((response) => console.log(response))
-      .catch((error) => {
-        console.log("creating new object failed: " + error.response.data)
-      })
-
-    setTitle("")
-    setAuthor("")
-    setUrl("")
-    loadBlogs()
-  }
-
-  return (
-    <form onSubmit={handleNewBlog}>
-      <div>
-        title:
-        <input
-          type="text"
-          value={title}
-          name="Title"
-          onChange={({ target }) => setTitle(target.value)}
-        />
-      </div>
-      <div>
-        author:
-        <input
-          type="text"
-          value={author}
-          name="Author"
-          onChange={({ target }) => setAuthor(target.value)}
-        />
-      </div>
-      <div>
-        url:
-        <input
-          type="text"
-          value={url}
-          name="Url"
-          onChange={({ target }) => setUrl(target.value)}
-        />
-      </div>
-      <button type="submit">Create</button>
-    </form>
-  )
-}
+import { CreateBlogForm } from "./components/NewBlog"
+import { Notification } from "./components/Notification"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
+  const [message, setMessage] = useState(null)
+  const [messageType, setMessageType] = useState(null) // set to "error" or "ok" (use atoms?)
+
+  //Clear notification box automatically
+  useEffect(() => {
+    setTimeout(() => {
+      setMessage(null)
+      setMessageType(null)
+    }, 5000)
+  }, [message])
 
   //In case of page reload, this ensures that user stay logged in.
   useEffect(() => {
@@ -79,15 +30,7 @@ const App = () => {
       blogService.setToken(user.token)
       loadBlogs()
     }
-  }, []) //Runs only once per reload
-
-  /* This wont work with my backend
-  useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
-  }, [])
-*/
+  }, [message]) //Runs only once per reload
 
   const loadBlogs = () => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -110,9 +53,13 @@ const App = () => {
       setUsername("")
       setPassword("")
 
+      setMessageType("ok")
+      setMessage("Login successful")
+
       loadBlogs()
     } catch (exception) {
-      console.log("Logging in failed: " + exception)
+      setMessageType("error")
+      setMessage("Login failed")
     }
   }
 
@@ -128,6 +75,7 @@ const App = () => {
     return (
       <div>
         <h2>Log in to application</h2>
+        <Notification message={message} messageType={messageType} />
         <form onSubmit={handleLogin}>
           <div>
             username
@@ -157,12 +105,17 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+      <Notification message={message} messageType={messageType} />
       <div>
         Logged in as <b>{user.name} </b>
         <button onClick={(event) => handleLogoutClick(event)}>Logout</button>
       </div>
       <br></br>
-      <CreateBlogForm loadBlogs={loadBlogs} />
+      <CreateBlogForm
+        loadBlogs={loadBlogs}
+        setMessage={setMessage}
+        setMessageType={setMessageType}
+      />
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}
