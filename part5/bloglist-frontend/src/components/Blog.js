@@ -1,6 +1,6 @@
-import { useState, forwardRef, useImperativeHandle } from "react"
+import { useState } from "react"
 
-const Blog = forwardRef(({ blog }, refs) => {
+const Blog = ({ blog }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -17,12 +17,6 @@ const Blog = forwardRef(({ blog }, refs) => {
   const toggleVisibility = () => {
     setVisible(!visible)
   }
-
-  useImperativeHandle(refs, () => {
-    return {
-      toggleVisibility,
-    }
-  })
 
   console.log("Blog is visible: " + visible)
 
@@ -42,6 +36,6 @@ const Blog = forwardRef(({ blog }, refs) => {
       </div>
     </div>
   )
-})
+}
 
 export default Blog
