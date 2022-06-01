@@ -1,13 +1,7 @@
 import { useState } from "react"
+import PropTypes from 'prop-types'
 import blogService from "../services/blogs"
-
-const Deletebutton = ({ handleDeleteClick, username, blogUserName }) => {
-  if (username === blogUserName) {
-    return (
-    <button onClick={handleDeleteClick}>Remove</button>
-    )
-  }
-}
+import Deletebutton from "../components/deletebutton"
 
 const Blog = ({ blog, setMessage, setMessageType, loadBlogs, username }) => {
   const blogStyle = {
@@ -87,6 +81,15 @@ const Blog = ({ blog, setMessage, setMessageType, loadBlogs, username }) => {
       </div>
     </div>
   )
+}
+
+//blog, setMessage, setMessageType, loadBlogs, username
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  setMessage: PropTypes.func.isRequired,
+  setMessageType: PropTypes.func.isRequired,
+  loadBlogs: PropTypes.func.isRequired,
+  username: PropTypes.string.isRequired
 }
 
 export default Blog
