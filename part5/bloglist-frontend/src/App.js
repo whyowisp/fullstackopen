@@ -39,6 +39,7 @@ const App = () => {
     .then((blogs) => {
       //ex5.9 solution
       setBlogs(blogs.sort((a, b) => a.likes - b.likes))
+      console.log('Blogs loaded and sorted')
     })
   }
 
@@ -77,7 +78,6 @@ const App = () => {
     setUser(null)
   }
 
-  console.log(blogs)
   if (user === null) {
     return (
       <div>
@@ -108,6 +108,7 @@ const App = () => {
     )
   }
 
+  console.log(user)
   //else
   return (
     <div>
@@ -132,6 +133,7 @@ const App = () => {
           loadBlogs={loadBlogs}
           setMessage={setMessage}
           setMessageType={setMessageType}
+          username={user.name}
         />
       ))}
     </div>

@@ -1,7 +1,13 @@
 import { useState } from "react"
 import blogService from "../services/blogs"
 
-const Blog = ({ blog, setMessage, setMessageType, loadBlogs }) => {
+const Deletebutton = ({ handleDeleteClick, username, blogUserName }) => {
+  if (username === blogUserName) return (
+    <button onClick={handleDeleteClick}>Remove</button>
+  )
+}
+
+const Blog = ({ blog, setMessage, setMessageType, loadBlogs, username }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -20,7 +26,7 @@ const Blog = ({ blog, setMessage, setMessageType, loadBlogs }) => {
   }
 
   //Handle update
-  const handleClick = async (event) => {
+  const handleLikeClick = async (event) => {
     event.preventDefault()
 
     const updatedBlog = {
@@ -31,17 +37,32 @@ const Blog = ({ blog, setMessage, setMessageType, loadBlogs }) => {
       url: blog.url,
     }
 
-    await blogService.updateExisting(updatedBlog, blog.id)
+    await blogService
+      .updateBlog(updatedBlog, blog.id)
       .then((response) => {
-        console.log('Updated blog: ' + JSON.stringify(response))
+        console.log("Updated blog: " + JSON.stringify(response))
         loadBlogs()
-        setMessageType('ok')
+        setMessageType("ok")
         setMessage(`You liked blog ${blog.title}`)
       })
-      .catch((exception) => console.log('Jottain män mehtään' + exception))
+      .catch((exception) => console.log("Blog update failed: " + exception))
   }
 
-  console.log("Blog is visible: " + visible)
+  const handleDeleteClick = async (event) => {
+    event.preventDefault()
+
+    if (!window.confirm(`Really delete ${blog.title}?`)) return
+
+    await blogService
+      .deleteBlog(blog.id)
+      .then((response) => {
+        console.log(response)
+        loadBlogs()
+        setMessageType("ok")
+        setMessage(`Blog ${blog.title} deleted`)
+      })
+      .catch((error) => console.log("Poop hit the fan: " + error))
+  }
 
   return (
     <div>
@@ -50,15 +71,16 @@ const Blog = ({ blog, setMessage, setMessageType, loadBlogs }) => {
         <button onClick={toggleVisibility}>Show</button>
       </div>
       <div style={{ ...blogStyle, ...showWhenVisible }}>
-        <b>{blog.title}</b> - {blog.author}
+        <b>{blog.title}</b> - {blog.author}{" "}
+        <button onClick={toggleVisibility}>Hide</button>
         <p>{blog.url}</p>
         <p>
-          Likes: {blog.likes} <button onClick={handleClick}>Like</button>
+          Likes: {blog.likes} <button onClick={handleLikeClick}>Like</button>
         </p>
         <p>
           <em>Posted by:</em> {blog.user.name}
         </p>
-        <button onClick={toggleVisibility}>Close</button>
+        <Deletebutton onClick={handleDeleteClick} username={username} blogUserName={blog.user.name} />
       </div>
     </div>
   )
