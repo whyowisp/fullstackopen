@@ -2,9 +2,11 @@ import { useState } from "react"
 import blogService from "../services/blogs"
 
 const Deletebutton = ({ handleDeleteClick, username, blogUserName }) => {
-  if (username === blogUserName) return (
+  if (username === blogUserName) {
+    return (
     <button onClick={handleDeleteClick}>Remove</button>
-  )
+    )
+  }
 }
 
 const Blog = ({ blog, setMessage, setMessageType, loadBlogs, username }) => {
@@ -50,6 +52,7 @@ const Blog = ({ blog, setMessage, setMessageType, loadBlogs, username }) => {
 
   const handleDeleteClick = async (event) => {
     event.preventDefault()
+    console.log('button clicckes')
 
     if (!window.confirm(`Really delete ${blog.title}?`)) return
 
@@ -71,7 +74,7 @@ const Blog = ({ blog, setMessage, setMessageType, loadBlogs, username }) => {
         <button onClick={toggleVisibility}>Show</button>
       </div>
       <div style={{ ...blogStyle, ...showWhenVisible }}>
-        <b>{blog.title}</b> - {blog.author}{" "}
+        <b>{blog.title}</b> - {blog.author}
         <button onClick={toggleVisibility}>Hide</button>
         <p>{blog.url}</p>
         <p>
@@ -80,7 +83,7 @@ const Blog = ({ blog, setMessage, setMessageType, loadBlogs, username }) => {
         <p>
           <em>Posted by:</em> {blog.user.name}
         </p>
-        <Deletebutton onClick={handleDeleteClick} username={username} blogUserName={blog.user.name} />
+        <Deletebutton handleDeleteClick={handleDeleteClick} username={username} blogUserName={blog.user.name} />
       </div>
     </div>
   )

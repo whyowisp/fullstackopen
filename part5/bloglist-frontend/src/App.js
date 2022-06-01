@@ -108,7 +108,6 @@ const App = () => {
     )
   }
 
-  console.log(user)
   //else
   return (
     <div>
