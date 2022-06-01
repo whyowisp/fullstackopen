@@ -1,16 +1,16 @@
-import { useState, useEffect } from "react"
-import Blog from "./components/Blog"
-import CreateBlogForm from "./components/CreateBlogForm"
-import Notification from "./components/Notification"
-import Togglable from "./components/Togglable"
+import { useState, useEffect } from 'react'
+import Blog from './components/Blog'
+import CreateBlogForm from './components/CreateBlogForm'
+import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 
-import blogService from "./services/blogs"
-import loginService from "./services/login"
+import blogService from './services/blogs'
+import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
   const [messageType, setMessageType] = useState(null) // set to "error" or "ok" (atoms?)
@@ -25,7 +25,7 @@ const App = () => {
 
   //In case of page reload, this ensures that user stay logged in.
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser")
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
@@ -36,11 +36,11 @@ const App = () => {
 
   const loadBlogs = () => {
     blogService.getAll()
-    .then((blogs) => {
+      .then((blogs) => {
       //ex5.9 solution
-      setBlogs(blogs.sort((a, b) => a.likes - b.likes))
-      console.log('Blogs loaded and sorted')
-    })
+        setBlogs(blogs.sort((a, b) => a.likes - b.likes))
+        console.log('Blogs loaded and sorted')
+      })
   }
 
   const handleLogin = async (event) => {
@@ -52,28 +52,28 @@ const App = () => {
         password,
       })
 
-      window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user))
+      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
 
       blogService.setToken(user.token)
 
       setUser(user)
-      setUsername("")
-      setPassword("")
+      setUsername('')
+      setPassword('')
 
-      setMessageType("ok")
-      setMessage("Login successful")
+      setMessageType('ok')
+      setMessage('Login successful')
 
       loadBlogs()
     } catch (exception) {
-      setMessageType("error")
-      setMessage("Login failed")
+      setMessageType('error')
+      setMessage('Login failed')
     }
   }
 
   const handleLogoutClick = (event) => {
     event.preventDefault()
-    console.log(user.name + " logged out")
-    window.localStorage.removeItem("loggedBlogappUser")
+    console.log(user.name + ' logged out')
+    window.localStorage.removeItem('loggedBlogappUser')
 
     setUser(null)
   }

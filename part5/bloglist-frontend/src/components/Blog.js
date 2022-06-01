@@ -1,21 +1,21 @@
-import { useState } from "react"
+import { useState } from 'react'
 import PropTypes from 'prop-types'
-import blogService from "../services/blogs"
-import Deletebutton from "../components/deletebutton"
+import blogService from '../services/blogs'
+import Deletebutton from '../components/deletebutton'
 
 const Blog = ({ blog, setMessage, setMessageType, loadBlogs, username }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
-    border: "solid",
+    border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
   }
 
   const [visible, setVisible] = useState(false)
 
-  const hideWhenVisible = { display: visible ? "none" : "" }
-  const showWhenVisible = { display: visible ? "" : "none" }
+  const hideWhenVisible = { display: visible ? 'none' : '' }
+  const showWhenVisible = { display: visible ? '' : 'none' }
 
   const toggleVisibility = () => {
     setVisible(!visible)
@@ -36,17 +36,16 @@ const Blog = ({ blog, setMessage, setMessageType, loadBlogs, username }) => {
     await blogService
       .updateBlog(updatedBlog, blog.id)
       .then((response) => {
-        console.log("Updated blog: " + JSON.stringify(response))
+        console.log('Updated blog: ' + JSON.stringify(response))
         loadBlogs()
-        setMessageType("ok")
+        setMessageType('ok')
         setMessage(`You liked blog ${blog.title}`)
       })
-      .catch((exception) => console.log("Blog update failed: " + exception))
+      .catch((exception) => console.log('Blog update failed: ' + exception))
   }
 
   const handleDeleteClick = async (event) => {
     event.preventDefault()
-    console.log('button clicckes')
 
     if (!window.confirm(`Really delete ${blog.title}?`)) return
 
@@ -55,10 +54,10 @@ const Blog = ({ blog, setMessage, setMessageType, loadBlogs, username }) => {
       .then((response) => {
         console.log(response)
         loadBlogs()
-        setMessageType("ok")
+        setMessageType('ok')
         setMessage(`Blog ${blog.title} deleted`)
       })
-      .catch((error) => console.log("Poop hit the fan: " + error))
+      .catch((error) => console.log('Poop hit the fan: ' + error))
   }
 
   return (
