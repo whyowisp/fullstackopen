@@ -18,7 +18,7 @@ const CreateBlogForm = ({ loadBlogs, setMessage, setMessageType }) => {
     await blogService
       .createNew(newBlog)
       .then((response) => {
-        console.log(response)
+        console.log(JSON.stringify(response))
         setMessageType("ok")
         setMessage(`${title} from author ${author} created successfully`)
       })

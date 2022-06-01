@@ -71,12 +71,12 @@ const maxLikesDummy = {
   __v: 0
 }
 const mostLikesDummy = {
-  author: "Edsger W. Dijkstra",
+  author: 'Edsger W. Dijkstra',
   likes: 17
 }
 
 const mostBlogsDummy = {
-  author: "Robert C. Martin",
+  author: 'Robert C. Martin',
   blogs: 3
 }
 

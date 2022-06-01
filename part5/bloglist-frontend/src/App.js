@@ -13,7 +13,7 @@ const App = () => {
   const [password, setPassword] = useState("")
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState(null)
-  const [messageType, setMessageType] = useState(null) // set to "error" or "ok" (use atoms?)
+  const [messageType, setMessageType] = useState(null) // set to "error" or "ok" (atoms?)
 
   //Clear notification box automatically
   useEffect(() => {
@@ -32,10 +32,14 @@ const App = () => {
       blogService.setToken(user.token)
       loadBlogs()
     }
-  }, [message]) //Runs only once per reload
+  }, []) //Runs only once per reload
 
   const loadBlogs = () => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    blogService.getAll()
+    .then((blogs) => {
+      //ex5.9 solution
+      setBlogs(blogs.sort((a, b) => a.likes - b.likes))
+    })
   }
 
   const handleLogin = async (event) => {
@@ -73,6 +77,7 @@ const App = () => {
     setUser(null)
   }
 
+  console.log(blogs)
   if (user === null) {
     return (
       <div>
@@ -121,7 +126,13 @@ const App = () => {
         />
       </Togglable>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          loadBlogs={loadBlogs}
+          setMessage={setMessage}
+          setMessageType={setMessageType}
+        />
       ))}
     </div>
   )
