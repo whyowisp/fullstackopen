@@ -7,7 +7,7 @@ import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
-const App = () => {
+const App = (() => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -137,6 +137,5 @@ const App = () => {
       ))}
     </div>
   )
-}
-
+})
 export default App

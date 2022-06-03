@@ -62,11 +62,11 @@ const Blog = ({ blog, setMessage, setMessageType, loadBlogs, username }) => {
 
   return (
     <div>
-      <div style={{ ...blogStyle, ...hideWhenVisible }} id='hidden'>
+      <div style={{ ...blogStyle, ...hideWhenVisible }} id='detailsHidden'>
         <b>{blog.title}</b> - {blog.author}
         <button onClick={toggleVisibility}>Show</button>
       </div>
-      <div style={{ ...blogStyle, ...showWhenVisible }}>
+      <div style={{ ...blogStyle, ...showWhenVisible }} id='detailsVisible'>
         <b>{blog.title}</b> - {blog.author}
         <button onClick={toggleVisibility}>Hide</button>
         <p>{blog.url}</p>
@@ -82,7 +82,6 @@ const Blog = ({ blog, setMessage, setMessageType, loadBlogs, username }) => {
   )
 }
 
-//blog, setMessage, setMessageType, loadBlogs, username
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   setMessage: PropTypes.func.isRequired,
