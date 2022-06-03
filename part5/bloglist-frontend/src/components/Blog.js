@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 import blogService from '../services/blogs'
-import Deletebutton from '../components/deletebutton'
+import { Deletebutton, Likebutton } from './Buttons'
 
 const Blog = ({ blog, setMessage, setMessageType, loadBlogs, username }) => {
   const blogStyle = {
@@ -71,7 +71,7 @@ const Blog = ({ blog, setMessage, setMessageType, loadBlogs, username }) => {
         <button onClick={toggleVisibility}>Hide</button>
         <p>{blog.url}</p>
         <p>
-          Likes: {blog.likes} <button onClick={handleLikeClick}>Like</button>
+          Likes: {blog.likes} <Likebutton handleLikeClick={handleLikeClick} />
         </p>
         <p>
           <em>Posted by:</em> {blog.user.name}

@@ -6,4 +6,8 @@ const Deletebutton = ({ handleDeleteClick, username, blogUserName }) => {
   }
 }
 
-export default Deletebutton
+const Likebutton = ({ handleLikeClick }) => {
+  return <button onClick={handleLikeClick}>Like</button>
+}
+
+export { Deletebutton, Likebutton }

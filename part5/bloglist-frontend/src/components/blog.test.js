@@ -3,6 +3,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
+import { Likebutton } from './Buttons'
 
 const blog = {
   id: 'kljk45g36uk323rw432t',
@@ -43,5 +44,21 @@ describe('<Blog />', () => {
     const div = container.querySelector('#detailsVisible')
     expect(div).not.toHaveStyle('display: none')
     expect(div).toHaveTextContent('https://jokudomain/jokuhost/jokunenrouteLikes: 34', { exact: false })
+  })
+})
+
+describe('Button tests', () => {
+  test('if like button is clicked twice, event handler is called also twice', async () => {
+    const mockHandler = jest.fn()
+
+    render(
+      <Likebutton handleLikeClick={mockHandler}/>
+    )
+
+    const user = userEvent.setup()
+    const button = screen.getByText('Like')
+    await user.dblClick(button)
+
+    expect(mockHandler.mock.calls).toHaveLength(2)
   })
 })
