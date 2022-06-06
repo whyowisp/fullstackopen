@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 import blogService from '../services/blogs'
-import { Deletebutton, Likebutton } from './Buttons'
+import { Deletebutton, Likebutton } from './BlogButtons'
 
 const Blog = ({ blog, setMessage, setMessageType, loadBlogs, username }) => {
   const blogStyle = {

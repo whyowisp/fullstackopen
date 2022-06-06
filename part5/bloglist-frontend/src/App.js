@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
-import CreateBlogForm from './components/CreateBlogForm'
+import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 
@@ -9,9 +9,11 @@ import loginService from './services/login'
 
 const App = (() => {
   const [blogs, setBlogs] = useState([])
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+
   const [message, setMessage] = useState(null)
   const [messageType, setMessageType] = useState(null) // set to "error" or "ok" (atoms?)
 
@@ -41,6 +43,23 @@ const App = (() => {
         setBlogs(blogs.sort((a, b) => a.likes - b.likes))
         console.log('Blogs loaded and sorted')
       })
+  }
+
+  const createNewBlog = async (newBlog) => {
+    await blogService
+      .createNew(newBlog)
+      .then((response) => {
+        console.log(JSON.stringify(response))
+        setMessageType('ok')
+        setMessage(`${newBlog.title} from author ${newBlog.author} created successfully`)
+      })
+      .catch((error) => {
+        console.log('creating new object failed: ' + error.response.data)
+        setMessageType('error')
+        setMessage('Creating new blog failed')
+      })
+
+    loadBlogs()
   }
 
   const handleLogin = async (event) => {
@@ -119,11 +138,7 @@ const App = (() => {
       </div>
       <br></br>
       <Togglable buttonLabel="New blog">
-        <CreateBlogForm
-          loadBlogs={loadBlogs}
-          setMessage={setMessage}
-          setMessageType={setMessageType}
-        />
+        <BlogForm createNewBlog={createNewBlog} />
       </Togglable>
       {blogs.map((blog) => (
         <Blog
@@ -138,4 +153,5 @@ const App = (() => {
     </div>
   )
 })
+
 export default App
