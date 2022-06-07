@@ -1,12 +1,20 @@
 describe("Blog app", function () {
   beforeEach(function () {
     cy.request("POST", "http://localhost:3003/api/testing/reset")
-    const user = {
-      name: "Mikko Sipola",
-      username: "msipola",
-      password: "salainen",
-    }
-    cy.request("POST", "http://localhost:3003/api/users", user)
+    const users = [
+      {
+        name: "Mikko Sipola",
+        username: "msipola",
+        password: "salainen",
+      },
+      {
+        name: "Freija Sipola",
+        username: "fsipola",
+        password: "salainen"
+      }
+    ]
+    cy.request("POST", "http://localhost:3003/api/users", users[0])
+    cy.request("POST", "http://localhost:3003/api/users", users[1])
     cy.visit("http://localhost:3000")
   })
 
@@ -57,8 +65,27 @@ describe("Blog app", function () {
       it("user can like a blog", function () {
         cy.get('#showDetailsButton').click()
         cy.get('#likeBlogButton').click()
-        cy.get('.blogsDiv').contains('Likes: 1')
+        //Might be a problem later. Should get blog id or similar
+        cy.get('#detailsVisible').contains('Likes: 1')
       })
-    })
+      
+      it("User who created a blog can delete it", function () {
+        cy.get('#showDetailsButton').click()
+        cy.get('#deleteButton').click()
+
+        cy.contains('Blog Luin Silmarillionin kannesta kanteen - alkuperäiskiellellään deleted')
+      })
+
+      describe("When another user is logged in", function () {
+        beforeEach(function () {
+          cy.login({ username: 'fsipola', password: 'salainen' })
+        })
+  
+        it("Other user cannot delete other users blog", function () {
+          cy.get('#showDetailsButton').click()
+          cy.contains('Luin Silmarillionin').should('not.contain', 'Remove')
+        })
+      })
+    })   
   })
 })
