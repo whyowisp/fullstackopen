@@ -54,7 +54,7 @@ const App = (() => {
         setMessage(`${newBlog.title} from author ${newBlog.author} created successfully`)
       })
       .catch((error) => {
-        console.log('creating new object failed: ' + error.response.data)
+        console.log('creating new object failed: ' + error)
         setMessageType('error')
         setMessage('Creating new blog failed')
       })
@@ -102,7 +102,7 @@ const App = (() => {
       <div>
         <h2>Log in to application</h2>
         <Notification message={message} messageType={messageType} />
-        <form onSubmit={handleLogin}>
+        <form className="loginform" onSubmit={handleLogin}>
           <div>
             username
             <input
