@@ -36,19 +36,28 @@ describe("Blog app", function () {
 
     describe("When logged in", function () {
       beforeEach(function () {
-        cy.get(".loginform").find("input:first").type("msipola")
-        cy.get(".loginform").find("input:last").type("salainen")
-        cy.get(".loginform").find("button:first").click()
+        cy.login({ username: 'msipola', password: 'salainen' })
+        cy.createBlog({ 
+          title: 'Luin Silmarillionin kannesta kanteen - alkuperäiskiellellään', 
+          author: 'Miisa Mikänen',
+          url: 'https://mikahost/mikaroute/luinsilmarillionin' 
+        })
       })
 
-      it.only("A blog can be created", function () {
+      it("A blog can be created", function () {
         cy.get('#openBlogFormButton').click()
         cy.get('#titleInput').type("Tenavien tähtikokous järjestetään, oletko valmis")
         cy.get('#authorInput').type("Jaska Jokunen")
         cy.get('#urlInput').type('http://jokunenhost.fi/jokunenroute/jokusenpostaukset/tahdet')
         cy.get('#blogSubmitButton').click()
 
-        cy.get('.blogsDiv').contains('Tenavien tähtikokous järjestetään, oletko valmis')
+        cy.contains('Tenavien tähtikokous järjestetään, oletko valmis')
+      })
+
+      it("user can like a blog", function () {
+        cy.get('#showDetailsButton').click()
+        cy.get('#likeBlogButton').click()
+        cy.get('.blogsDiv').contains('Likes: 1')
       })
     })
   })

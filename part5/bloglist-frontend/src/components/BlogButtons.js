@@ -7,7 +7,7 @@ const Deletebutton = ({ handleDeleteClick, username, blogUserName }) => {
 }
 
 const Likebutton = ({ handleLikeClick }) => {
-  return <button onClick={handleLikeClick}>Like</button>
+  return <button id='likeBlogButton' onClick={handleLikeClick}>Like</button>
 }
 
 export { Deletebutton, Likebutton }
