@@ -61,10 +61,10 @@ const Blog = ({ blog, setMessage, setMessageType, loadBlogs, username }) => {
   }
 
   return (
-    <div className='blogsDiv'>
+    <div>
       <div style={{ ...blogStyle, ...hideWhenVisible }} id='detailsHidden'>
         <b>{blog.title}</b> - {blog.author}
-        <button onClick={toggleVisibility}>Show</button>
+        <button id='showDetailsButton' onClick={toggleVisibility}>Show</button>
       </div>
       <div style={{ ...blogStyle, ...showWhenVisible }} id='detailsVisible'>
         <b>{blog.title}</b> - {blog.author}
