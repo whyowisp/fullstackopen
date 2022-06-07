@@ -20,7 +20,7 @@ const Notification = ({ message, messageType }) => {
   }
 
   if (messageType === 'error')
-    return <div style={{ ...baseStyle, ...errorStyle }}>{message}</div>
+    return <div id='errorDiv' style={{ ...baseStyle, ...errorStyle }}>{message}</div>
   else if (messageType === 'ok')
     return <div style={{ ...baseStyle, ...okStyle }}>{message}</div>
   else return null
