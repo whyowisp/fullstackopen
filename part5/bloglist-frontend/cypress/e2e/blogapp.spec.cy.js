@@ -46,9 +46,19 @@ describe("Blog app", function () {
       beforeEach(function () {
         cy.login({ username: 'msipola', password: 'salainen' })
         cy.createBlog({ 
-          title: 'Luin Silmarillionin kannesta kanteen - alkuperäiskiellellään', 
+          title: 'Luin Silmarillionin kannesta kanteen - alkuperäiskielellään', 
           author: 'Miisa Mikänen',
-          url: 'https://mikahost/mikaroute/luinsilmarillionin' 
+          url: 'https://mikahost/mikaroute/luinsilmarillionin',
+        })
+        cy.createBlog({ 
+          title: 'Mitä lapsi tarvitsee hyvään kasvuun', 
+          author: 'Jari Sinkkonen',
+          url: 'https://.../...',
+        })
+        cy.createBlog({ 
+          title: 'Maan voimaa', 
+          author: 'Deborah',
+          url: 'https://.../...',
         })
       })
 
@@ -70,10 +80,38 @@ describe("Blog app", function () {
       })
       
       it("User who created a blog can delete it", function () {
-        cy.get('#showDetailsButton').click()
-        cy.get('#deleteButton').click()
+        cy.contains('Luin Silmarillionin')
+          .parent()
+          .find('#showDetailsButton')
+          .click()
+        cy.contains('Luin Silmarillionin')
+          .parent()
+          .next()
+          .find('#deleteButton')
+          .click()
+        cy.contains('Blog Luin Silmarillionin kannesta kanteen - alkuperäiskielellään deleted')
+      })
 
-        cy.contains('Blog Luin Silmarillionin kannesta kanteen - alkuperäiskiellellään deleted')
+      it.only("Blogs are arranged in descending order by likes", function () {
+        cy.contains('Luin Silmarillionin')
+          .parent()
+          .find('#showDetailsButton')
+          .click()
+          .parent()
+          .next() //Next div (details shown)
+          .find('#likeBlogButton')
+          .click().wait(1000).click()
+          cy.contains('Maan voimaa')
+          .parent()
+          .find('#showDetailsButton')
+          .click()
+          .parent()
+          .next() //Next div (details shown)
+          .find('#likeBlogButton')
+          .click()
+          cy.get('.blogDiv').eq(0).should('contain', 'Luin Silmarillionin')
+          cy.get('.blogDiv').eq(1).should('contain', 'Maan voimaa')
+          cy.get('.blogDiv').eq(2).should('contain', 'Mitä lapsi')
       })
 
       describe("When another user is logged in", function () {

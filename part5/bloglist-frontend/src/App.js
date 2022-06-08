@@ -40,7 +40,8 @@ const App = (() => {
     blogService.getAll()
       .then((blogs) => {
       //ex5.9 solution
-        setBlogs(blogs.sort((a, b) => a.likes - b.likes))
+        blogs.sort((a, b) => a.likes - b.likes)
+        setBlogs(blogs.reverse())
         console.log('Blogs loaded and sorted')
       })
   }
