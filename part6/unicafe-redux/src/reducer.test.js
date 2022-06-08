@@ -63,7 +63,7 @@ describe('unicafe reducer', () => {
     })
   })
 
-  test('calling zero returns state as it was sent', () => {
+  test('calling zero resets all', () => {
     const initialState = {
       good: 4,
       ok: 8,
@@ -78,9 +78,9 @@ describe('unicafe reducer', () => {
     deepFreeze(state)
     const newState = counterReducer(state, action)
     expect(newState).toEqual({
-      good: 4,
-      ok: 8,
-      bad: 1
+      good: 0,
+      ok: 0,
+      bad: 0
     })
   })
 })
