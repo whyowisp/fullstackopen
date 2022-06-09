@@ -17,11 +17,17 @@ const asObject = (anecdote) => {
   }
 }
 
+const sortDescending = (state) => {
+  state.sort((a, b) => a.votes - b.votes).reverse()
+}
+
 const initialState = anecdotesAtStart.map(asObject)
 
 const reducer = (state = initialState, action) => {
   console.log('state now: ', state)
   console.log('action', action)
+
+  sortDescending(state)
 
   switch (action.type) {
     case 'UPVOTE': {
