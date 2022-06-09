@@ -27,14 +27,14 @@ const reducer = (state = initialState, action) => {
   console.log('state now: ', state)
   console.log('action', action)
 
-  sortDescending(state)
-
   switch (action.type) {
     case 'UPVOTE': {
       const id = action.data.id
       const anecdoteToChange = state.find(anecdote => anecdote.id === id)
       const changedAnecdote = { ...anecdoteToChange, votes: anecdoteToChange.votes + 1 }
-      return state.map(anecdote => anecdote.id !== id ? anecdote : changedAnecdote)
+      const updatedState = state.map(anecdote => anecdote.id !== id ? anecdote : changedAnecdote)
+      sortDescending(updatedState)
+      return updatedState
     }
     case 'CREATE': {
       return [...state, action.data]
