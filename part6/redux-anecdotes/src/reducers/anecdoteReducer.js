@@ -18,7 +18,7 @@ const asObject = (anecdote) => {
 }
 
 const sortDescending = (state) => {
-  state.sort((a, b) => a.votes - b.votes).reverse()
+  state.sort((a, b) => b.votes - a.votes) //better reverse sort method than doing sort().reverse()
 }
 
 const initialState = anecdotesAtStart.map(asObject)
