@@ -1,15 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { configureStore } from '@reduxjs/toolkit'
 import { Provider } from 'react-redux'
-import App from './App'
-import anecdoteReducer from './reducers/anecdoteReducer'
 
-const store = configureStore({
-  reducer: {
-    anecdotes: anecdoteReducer 
-  }
-})
+import App from './App'
+import store from './store'
 
 console.log(store.getState())
 
