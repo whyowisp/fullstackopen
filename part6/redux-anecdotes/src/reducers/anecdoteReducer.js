@@ -17,11 +17,11 @@ const asObject = (anecdote) => {
   }
 }
 
+const initialState = anecdotesAtStart.map(asObject)
+
 const sortDescending = (state) => {
   state.sort((a, b) => b.votes - a.votes) //better reverse sort method than doing sort().reverse()
 }
-
-const initialState = anecdotesAtStart.map(asObject)
 
 const reducer = (state = initialState, action) => {
   //console.log('state now: ', state)

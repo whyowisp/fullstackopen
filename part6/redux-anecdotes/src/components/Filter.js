@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux"
 
-import { setFiltered, resetFilter } from "../reducers/filterReducer"
+import { setFiltered, resetFilter, upvoteFiltered } from "../reducers/filterReducer"
 import { upvote } from '../reducers/anecdoteReducer'
 import { setMessage } from '../reducers/messageReducer'
 
@@ -15,7 +15,11 @@ const Filter = () => {
 
   const vote = (id, content) => {
     console.log('vote', id)
+    //dispatch to original anecdotes
     dispatch(upvote(id))
+    //dispatch to filtered anecdotes
+    dispatch(upvoteFiltered(id))
+
     dispatch(setMessage(content))
   }
 
