@@ -9,7 +9,6 @@ const AnecdoteForm = () => {
     event.preventDefault()
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
-    //Both reducer and service has a function called createNew, but that´s ok for now
     dispatch(createAnecdote(content))
   }
   

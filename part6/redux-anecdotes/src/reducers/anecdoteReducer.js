@@ -37,7 +37,7 @@ export const upvote = (id) => {
   }
 }
 
-export const createAnecdote = (content) => {
+export const createNew = (content) => {
   return {
     type: "CREATE",
     data: {
@@ -57,6 +57,14 @@ export const initializeNotes = () => {
   return async dispatch => {
     const anecdotes = await anecdoteService.getAll()
     dispatch(setAnecdotes(anecdotes))
+  }
+}
+
+export const createAnecdote = (content) => {
+  return async dispatch => {
+    //Obs! same function name 'createNew' in both anecdoteService and anecdoteReducer
+    const newAnecdote = await anecdoteService.createNew(content)
+    dispatch(createNew(newAnecdote))
   }
 }
 
