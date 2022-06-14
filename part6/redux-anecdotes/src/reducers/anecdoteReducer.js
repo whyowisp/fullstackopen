@@ -1,3 +1,5 @@
+import anecdoteService from "../services/anecdotes"
+
 const sortDescending = (state) => {
   state.sort((a, b) => b.votes - a.votes) //better reverse sort method than doing sort().reverse()
 }
@@ -35,7 +37,7 @@ export const upvote = (id) => {
   }
 }
 
-export const createNew = (content) => {
+export const createAnecdote = (content) => {
   return {
     type: "CREATE",
     data: {
@@ -48,6 +50,13 @@ export const setAnecdotes = (content) => {
   return {
     type: "INITIALIZE",
     data: { content },
+  }
+}
+
+export const initializeNotes = () => {
+  return async dispatch => {
+    const anecdotes = await anecdoteService.getAll()
+    dispatch(setAnecdotes(anecdotes))
   }
 }
 

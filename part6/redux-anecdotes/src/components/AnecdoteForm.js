@@ -1,7 +1,6 @@
 import { useDispatch } from 'react-redux'
 
-import { createNew } from '../reducers/anecdoteReducer'
-import anecdoteService from '../services/anecdotes'
+import { createAnecdote } from '../reducers/anecdoteReducer'
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch()
@@ -11,8 +10,7 @@ const AnecdoteForm = () => {
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
     //Both reducer and service has a function called createNew, but that´s ok for now
-    const newAnecdote = await anecdoteService.createNew(content)
-    dispatch(createNew(newAnecdote))
+    dispatch(createAnecdote(content))
   }
   
   return (
