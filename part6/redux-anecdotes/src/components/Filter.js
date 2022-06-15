@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux"
 
 import { setFiltered, resetFilter, upvoteFiltered } from "../reducers/filterReducer"
-import { upvote } from '../reducers/anecdoteReducer'
+import { upvoteAnecdote } from '../reducers/anecdoteReducer'
 import { setMessage } from '../reducers/messageReducer'
 
 const Filter = () => {
@@ -13,14 +13,14 @@ const Filter = () => {
     marginBottom: 10,
   }
 
-  const vote = (id, content) => {
-    console.log('vote', id)
+  const vote = (anecdote) => {
+    console.log('vote', anecdote.id)
     //dispatch to original anecdotes
-    dispatch(upvote(id))
+    dispatch(upvoteAnecdote(anecdote))
     //dispatch to filtered anecdotes
-    dispatch(upvoteFiltered(id))
+    dispatch(upvoteFiltered(anecdote.id))
 
-    dispatch(setMessage(content))
+    dispatch(setMessage(anecdote.content))
   }
 
   const handleChange = (event) => {
@@ -47,7 +47,7 @@ const Filter = () => {
           </div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id, anecdote.content)}>vote</button>
+            <button onClick={() => vote(anecdote)}>vote</button>
           </div>
         </div>
       ))}

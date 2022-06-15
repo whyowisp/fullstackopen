@@ -53,7 +53,7 @@ export const setAnecdotes = (content) => {
   }
 }
 
-export const initializeNotes = () => {
+export const initializeAnecdotes = () => {
   return async dispatch => {
     const anecdotes = await anecdoteService.getAll()
     dispatch(setAnecdotes(anecdotes))
@@ -65,6 +65,13 @@ export const createAnecdote = (content) => {
     //Obs! same function name 'createNew' in both anecdoteService and anecdoteReducer
     const newAnecdote = await anecdoteService.createNew(content)
     dispatch(createNew(newAnecdote))
+  }
+}
+
+export const upvoteAnecdote = (id, content) => {
+  return async dispatch => {
+    const upvotedAnecdote = await anecdoteService.upvoteExisting(id, content)
+    dispatch(upvote(upvotedAnecdote.id))
   }
 }
 
