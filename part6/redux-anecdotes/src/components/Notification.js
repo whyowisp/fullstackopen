@@ -1,26 +1,16 @@
-import { useSelector, useDispatch } from "react-redux"
-import { resetMessage } from "../reducers/messageReducer"
+import { useSelector } from "react-redux"
 
 const Notification = () => {
-  const notification = useSelector((state) =>
-    state.message ? `You voted "${state.message}"` : ""
-  )
-  const dispatch = useDispatch()
   const style = {
     border: "solid",
     padding: 10,
     borderWidth: 1,
   }
+  const notification = useSelector((state) =>
+    state.message ? state.message : null
+  )
 
-  const reset = () => {
-    setTimeout(() => {
-      dispatch(resetMessage())
-    }, 5000)
-  }
-
-  reset()
-  console.log("Notification re-rendered: " + notification)
-
-  return <div style={style}>{notification}</div>
+  if (notification) return <div style={style}>{notification}</div>
 }
+
 export default Notification
