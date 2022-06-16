@@ -15,7 +15,7 @@ const Filter = (props) => {
     //dispatch to filtered anecdotes
     props.upvoteFiltered(anecdote.id)
 
-    props.setNotification(`You voted "${anecdote.content}"`, 10)
+    props.setNotification(`You voted "${anecdote.content}"`, 5)
   }
 
   const handleChange = (event) => {
