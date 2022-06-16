@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from "react-redux"
 
 import { setFiltered, resetFilter, upvoteFiltered } from "../reducers/filterReducer"
 import { upvoteAnecdote } from '../reducers/anecdoteReducer'
-import { setMessage } from '../reducers/messageReducer'
+import { setNotification } from '../reducers/messageReducer'
 
 const Filter = () => {
   const anecdotes = useSelector((state) => state.anecdotes)
@@ -20,7 +20,7 @@ const Filter = () => {
     //dispatch to filtered anecdotes
     dispatch(upvoteFiltered(anecdote.id))
 
-    dispatch(setMessage(anecdote.content))
+    dispatch(setNotification(`You voted "${anecdote.content}"`, 10))
   }
 
   const handleChange = (event) => {

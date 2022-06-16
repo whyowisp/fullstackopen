@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit"
 
 //OBS! It´s always initialState, not initialMessage for example
-const initialState = "Just checking if you're awake"
+const initialState = null
 
 const messageSlice = createSlice({
   name: "message",
@@ -9,8 +9,6 @@ const messageSlice = createSlice({
   reducers: {
     setMessage(state, action) {
       //Obs, apparently this returns new state (updates store), so no need to assign it like this: state = action.payload
-      //I think this return is for createSlice() which does the actual state updating.
-      //Confusing though because this function is inside an object
       return action.payload
     },
     resetMessage(state, action) {
@@ -20,4 +18,14 @@ const messageSlice = createSlice({
 })
 
 export const { setMessage, resetMessage } = messageSlice.actions
+
+export const setNotification = (message, interval) => {
+  return dispatch => { 
+    dispatch(setMessage(message))
+    setTimeout(() => {
+      dispatch(resetMessage())
+    }, interval * 1000)
+  }
+}
+
 export default messageSlice.reducer
