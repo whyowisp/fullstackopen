@@ -1,46 +1,41 @@
-import { useSelector, useDispatch } from "react-redux"
+import { connect } from "react-redux"
 
 import { setFiltered, resetFilter, upvoteFiltered } from "../reducers/filterReducer"
 import { upvoteAnecdote } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/messageReducer'
 
-const Filter = () => {
-  const anecdotes = useSelector((state) => state.anecdotes)
-  const filtered = useSelector((state) => state.filter)
-  //console.log("filtered results: " + JSON.stringify(filtered))
-  const dispatch = useDispatch()
+const Filter = (props) => {
   const style = {
     marginBottom: 10,
   }
 
   const vote = (anecdote) => {
-    console.log('vote', anecdote.id)
     //dispatch to original anecdotes
-    dispatch(upvoteAnecdote(anecdote))
+    props.upvoteAnecdote(anecdote)
     //dispatch to filtered anecdotes
-    dispatch(upvoteFiltered(anecdote.id))
+    props.upvoteFiltered(anecdote.id)
 
-    dispatch(setNotification(`You voted "${anecdote.content}"`, 10))
+    props.setNotification(`You voted "${anecdote.content}"`, 10)
   }
 
   const handleChange = (event) => {
     event.preventDefault()
 
     if (!event.target.value) {
-      dispatch(resetFilter())
+      props.resetFilter()
       return
     }
 
-    const filteredAnecdotes = anecdotes.filter((anecdote) =>
+    const filteredAnecdotes = props.anecdotes.filter((anecdote) =>
       anecdote.content.toLowerCase().includes(event.target.value)
     )
-    dispatch(setFiltered(filteredAnecdotes))
+    props.setFiltered(filteredAnecdotes)
   }
 
   return (
     <div style={style}>
       filter <input onChange={handleChange} />
-      {filtered.map((anecdote) => (
+      {props.filter.map((anecdote) => (
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
@@ -55,4 +50,22 @@ const Filter = () => {
   )
 }
 
-export default Filter
+const mapStateToProps = (state) => {
+  return {
+    anecdotes: state.anecdotes,
+    filter: state.filter,
+  }
+}
+
+const mapDispatchToProps = {
+  setFiltered,
+  resetFilter, 
+  upvoteFiltered,
+  upvoteAnecdote,
+  setNotification,
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Filter)
