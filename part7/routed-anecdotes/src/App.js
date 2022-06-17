@@ -95,8 +95,8 @@ const CreateNew = (props) => {
     e.preventDefault()
     props.addNew({
       content: content.value,
-      author,
-      info,
+      author: author.value,
+      info: info.value,
       votes: 0,
     })
     navigate("/anecdotes")
@@ -120,6 +120,15 @@ const CreateNew = (props) => {
         </div>
         <button>create</button>
       </form>
+      <button
+        onClick={() => {
+          content.reset()
+          author.reset()
+          info.reset()
+        }}
+      >
+        reset
+      </button>
     </div>
   )
 }
