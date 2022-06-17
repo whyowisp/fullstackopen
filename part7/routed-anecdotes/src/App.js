@@ -21,7 +21,15 @@ import { Routes, Route, Link, useMatch } from "react-router-dom"
   )
 }*/
 const Anecdote = ({ anecdote }) => {
-  return (anecdote.content)
+  return(
+  <div>
+    <h3>
+      {anecdote.content} by {anecdote.author}
+    </h3>
+    <p>has {anecdote.votes} votes</p>
+    <p>For more info see <a href={anecdote.info}>{anecdote.info}</a></p>
+  </div>
+  )
 }
 
 const AnecdoteList = ({ anecdotes }) => (
@@ -30,7 +38,7 @@ const AnecdoteList = ({ anecdotes }) => (
     <ul>
       {anecdotes.map((anecdote) => (
         <li key={anecdote.id}>
-          <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>  
+          <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
         </li>
       ))}
     </ul>
@@ -163,39 +171,41 @@ const App = () => {
   }
 
   //if URL matches 'to', match object is created
-  const match = useMatch('/anecdotes/:id')
-  
-  const anecdote = match ? anecdotes.find(anecdote => anecdote.id === Number(match.params.id)) : null
+  const match = useMatch("/anecdotes/:id")
+
+  const anecdote = match
+    ? anecdotes.find((anecdote) => anecdote.id === Number(match.params.id))
+    : null
 
   return (
     <div>
       <h1>Software anecdotes</h1>
 
-        <div>
-          <Link style={padding} to="/anecdotes">
-            anecdotes
-          </Link>
-          <Link style={padding} to="/create">
-            create new
-          </Link>
-          <Link style={padding} to="/about">
-            about
-          </Link>
-        </div>
+      <div>
+        <Link style={padding} to="/anecdotes">
+          anecdotes
+        </Link>
+        <Link style={padding} to="/create">
+          create new
+        </Link>
+        <Link style={padding} to="/about">
+          about
+        </Link>
+      </div>
 
-        <Routes>
-          <Route
-            path="/anecdotes/:id"
-            element={<Anecdote anecdote={anecdote} />}
-          />
-          <Route
-            path="/anecdotes"
-            element={<AnecdoteList anecdotes={anecdotes} />}
-          />
-          <Route path="/create" element={<CreateNew />} />
-          <Route path="/about" element={<About />} />
-        </Routes>
-      
+      <Routes>
+        <Route
+          path="/anecdotes/:id"
+          element={<Anecdote anecdote={anecdote} />}
+        />
+        <Route
+          path="/anecdotes"
+          element={<AnecdoteList anecdotes={anecdotes} />}
+        />
+        <Route path="/create" element={<CreateNew />} />
+        <Route path="/about" element={<About />} />
+      </Routes>
+
       <Footer />
     </div>
   )
