@@ -6,26 +6,20 @@ import Togglable from './components/Togglable'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { resetMessage, setMessage } from './reducers/messageReducer'
+import { setBlogs } from './reducers/blogReducer'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
   const message = useSelector((state) => state.messager)
-  const dispatch = useDispatch()
+  const blogs = useSelector((state) => state.blogs)
 
-  //Clear notification box automatically. (This functionality has turned out to be unpredictable after redux refactor: ex 7.10)
-  useEffect(() => {
-    setTimeout(() => {
-      dispatch(resetMessage())
-    }, 5000)
-  }, [message])
+  const dispatch = useDispatch()
 
   //In case of page reload, this ensures that user stay logged in.
   useEffect(() => {
@@ -38,11 +32,17 @@ const App = () => {
     }
   }, []) //Runs only once per reload
 
+  //Clear notification box automatically. (This functionality has turned out to be unpredictable after redux refactor: ex 7.10)
+  useEffect(() => {
+    setTimeout(() => {
+      dispatch(resetMessage())
+    }, 5000)
+  }, [message])
+
   const loadBlogs = () => {
     blogService.getAll().then((blogs) => {
-      //ex5.9 solution
-      blogs.sort((a, b) => a.likes - b.likes)
-      setBlogs(blogs.reverse())
+      //blogs.sort((a, b) => b.likes - a.likes)
+      dispatch(setBlogs(blogs))
       console.log('Blogs loaded and sorted')
     })
   }
@@ -50,8 +50,7 @@ const App = () => {
   const createNewBlog = async (newBlog) => {
     await blogService
       .createNew(newBlog)
-      .then((response) => {
-        console.log(JSON.stringify(response))
+      .then(() => {
         dispatch(
           setMessage({
             message: `${newBlog.title} from author ${newBlog.author} created successfully`,
@@ -137,30 +136,35 @@ const App = () => {
   }
 
   //else
-  return (
-    <div>
-      <h2>blogs</h2>
-      <Notification />
+  if (blogs.length > 0) {
+    return (
       <div>
-        Logged in as <b>{user.name} </b>
-        <button id="logoutButton" onClick={(event) => handleLogoutClick(event)}>
-          Logout
-        </button>
+        <h2>blogs</h2>
+        <Notification />
+        <div>
+          Logged in as <b>{user.name} </b>
+          <button
+            id="logoutButton"
+            onClick={(event) => handleLogoutClick(event)}
+          >
+            Logout
+          </button>
+        </div>
+        <br></br>
+        <Togglable buttonLabel="New blog">
+          <BlogForm createNewBlog={createNewBlog} />
+        </Togglable>
+        {blogs.map((blog) => (
+          <Blog
+            key={blog.id}
+            blog={blog}
+            loadBlogs={loadBlogs}
+            username={user.name}
+          />
+        ))}
       </div>
-      <br></br>
-      <Togglable buttonLabel="New blog">
-        <BlogForm createNewBlog={createNewBlog} />
-      </Togglable>
-      {blogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          loadBlogs={loadBlogs}
-          username={user.name}
-        />
-      ))}
-    </div>
-  )
+    )
+  }
 }
 
 export default App

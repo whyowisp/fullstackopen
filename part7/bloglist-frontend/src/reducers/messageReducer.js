@@ -12,7 +12,6 @@ export const messageSlice = createSlice({
       return ''
     },
     setMessage(state, action) {
-      console.log(action.payload)
       return action.payload
     },
   },
