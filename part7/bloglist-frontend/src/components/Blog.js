@@ -3,7 +3,10 @@ import PropTypes from 'prop-types'
 import blogService from '../services/blogs'
 import { Deletebutton, Likebutton } from './BlogButtons'
 
-const Blog = ({ blog, setMessage, setMessageType, loadBlogs, username }) => {
+import { useDispatch } from 'react-redux'
+import { setMessage } from '../reducers/messageReducer'
+
+const Blog = ({ blog, loadBlogs, username }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -13,6 +16,7 @@ const Blog = ({ blog, setMessage, setMessageType, loadBlogs, username }) => {
   }
 
   const [visible, setVisible] = useState(false)
+  const dispatch = useDispatch()
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
@@ -38,8 +42,12 @@ const Blog = ({ blog, setMessage, setMessageType, loadBlogs, username }) => {
       .then((response) => {
         console.log('Updated blog: ' + JSON.stringify(response))
         loadBlogs()
-        setMessageType('ok')
-        setMessage(`You liked blog ${blog.title}`)
+        dispatch(
+          setMessage({
+            message: `You liked blog ${blog.title}`,
+            type: 'ok',
+          })
+        )
       })
       .catch((exception) => console.log('Blog update failed: ' + exception))
   }
@@ -54,19 +62,25 @@ const Blog = ({ blog, setMessage, setMessageType, loadBlogs, username }) => {
       .then((response) => {
         console.log(response)
         loadBlogs()
-        setMessageType('ok')
-        setMessage(`Blog ${blog.title} deleted`)
+        dispatch(
+          setMessage({
+            message: `Blog ${blog.title} deleted`,
+            type: 'ok',
+          })
+        )
       })
       .catch((error) => console.log('Poop hit the fan: ' + error))
   }
 
   return (
-    <div className='blogDiv'>
-      <div style={{ ...blogStyle, ...hideWhenVisible }} id='detailsHidden'>
+    <div className="blogDiv">
+      <div style={{ ...blogStyle, ...hideWhenVisible }} id="detailsHidden">
         <b>{blog.title}</b> - {blog.author}
-        <button id='showDetailsButton' onClick={toggleVisibility}>Show</button>
+        <button id="showDetailsButton" onClick={toggleVisibility}>
+          Show
+        </button>
       </div>
-      <div style={{ ...blogStyle, ...showWhenVisible }} id='detailsVisible'>
+      <div style={{ ...blogStyle, ...showWhenVisible }} id="detailsVisible">
         <b>{blog.title}</b> - {blog.author}
         <button onClick={toggleVisibility}>Hide</button>
         <p>{blog.url}</p>
@@ -76,7 +90,11 @@ const Blog = ({ blog, setMessage, setMessageType, loadBlogs, username }) => {
         <p>
           <em>Posted by:</em> {blog.user.name}
         </p>
-        <Deletebutton handleDeleteClick={handleDeleteClick} username={username} blogUserName={blog.user.name} />
+        <Deletebutton
+          handleDeleteClick={handleDeleteClick}
+          username={username}
+          blogUserName={blog.user.name}
+        />
       </div>
     </div>
   )
@@ -84,10 +102,8 @@ const Blog = ({ blog, setMessage, setMessageType, loadBlogs, username }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  setMessage: PropTypes.func.isRequired,
-  setMessageType: PropTypes.func.isRequired,
   loadBlogs: PropTypes.func.isRequired,
-  username: PropTypes.string.isRequired
+  username: PropTypes.string.isRequired,
 }
 
 export default Blog

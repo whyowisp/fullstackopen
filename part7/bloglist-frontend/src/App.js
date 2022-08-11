@@ -4,6 +4,9 @@ import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 
+import { useSelector, useDispatch } from 'react-redux'
+import { resetMessage, setMessage } from './reducers/messageReducer'
+
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -14,14 +17,13 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
-  const [message, setMessage] = useState(null)
-  const [messageType, setMessageType] = useState(null) // set to "error" or "ok" (atoms?)
+  const message = useSelector((state) => state.messager)
+  const dispatch = useDispatch()
 
-  //Clear notification box automatically
+  //Clear notification box automatically. (This functionality has turned out to be unpredictable after redux refactor: ex 7.10)
   useEffect(() => {
     setTimeout(() => {
-      setMessage(null)
-      setMessageType(null)
+      dispatch(resetMessage())
     }, 5000)
   }, [message])
 
@@ -50,15 +52,21 @@ const App = () => {
       .createNew(newBlog)
       .then((response) => {
         console.log(JSON.stringify(response))
-        setMessageType('ok')
-        setMessage(
-          `${newBlog.title} from author ${newBlog.author} created successfully`
+        dispatch(
+          setMessage({
+            message: `${newBlog.title} from author ${newBlog.author} created successfully`,
+            type: 'ok',
+          })
         )
       })
       .catch((error) => {
         console.log('creating new object failed: ' + error)
-        setMessageType('error')
-        setMessage('Creating new blog failed')
+        dispatch(
+          setMessage({
+            message: 'Creating a new blog failed',
+            type: 'error',
+          })
+        )
       })
 
     loadBlogs()
@@ -81,13 +89,11 @@ const App = () => {
       setUsername('')
       setPassword('')
 
-      setMessageType('ok')
-      setMessage('Login successful')
+      dispatch(setMessage({ message: 'Login successful', type: 'ok' }))
 
       loadBlogs()
     } catch (exception) {
-      setMessageType('error')
-      setMessage('Login failed')
+      dispatch(setMessage({ message: 'Login failed', type: 'error' }))
     }
   }
 
@@ -99,11 +105,12 @@ const App = () => {
     setUser(null)
   }
 
+  //render
   if (user === null) {
     return (
       <div>
         <h2>Log in to application</h2>
-        <Notification message={message} messageType={messageType} />
+        <Notification />
         <form className="loginform" onSubmit={handleLogin}>
           <div>
             username
@@ -133,7 +140,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={message} messageType={messageType} />
+      <Notification />
       <div>
         Logged in as <b>{user.name} </b>
         <button id="logoutButton" onClick={(event) => handleLogoutClick(event)}>
@@ -149,8 +156,6 @@ const App = () => {
           key={blog.id}
           blog={blog}
           loadBlogs={loadBlogs}
-          setMessage={setMessage}
-          setMessageType={setMessageType}
           username={user.name}
         />
       ))}
