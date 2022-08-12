@@ -28,7 +28,7 @@ const App = () => {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
-      loadBlogs()
+      loadBlogs('App.js useEffect')
     }
   }, []) //Runs only once per reload
 
@@ -39,32 +39,9 @@ const App = () => {
     }, 5000)
   }, [message])
 
+  //Important! Always use this method to reload page; send over to child components etc.
   const loadBlogs = () => {
     dispatch(initializeBlogs())
-  }
-
-  const createNewBlog = async (newBlog) => {
-    await blogService
-      .createNew(newBlog)
-      .then(() => {
-        dispatch(
-          setMessage({
-            message: `${newBlog.title} from author ${newBlog.author} created successfully`,
-            type: 'ok',
-          })
-        )
-      })
-      .catch((error) => {
-        console.log('creating new object failed: ' + error)
-        dispatch(
-          setMessage({
-            message: 'Creating a new blog failed',
-            type: 'error',
-          })
-        )
-      })
-
-    loadBlogs()
   }
 
   const handleLogin = async (event) => {
@@ -148,7 +125,7 @@ const App = () => {
         </div>
         <br></br>
         <Togglable buttonLabel="New blog">
-          <BlogForm createNewBlog={createNewBlog} />
+          <BlogForm loadBlogs={loadBlogs} />
         </Togglable>
         {blogs.map((blog) => (
           <Blog
