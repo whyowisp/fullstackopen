@@ -1,12 +1,11 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
-import blogService from '../services/blogs'
 import { Deletebutton, Likebutton } from './BlogButtons'
 
 import { useDispatch } from 'react-redux'
-import { setMessage } from '../reducers/messageReducer'
+import { updateLikesOfBlog, deleteBlog } from '../reducers/blogReducer'
 
-const Blog = ({ blog, loadBlogs, username }) => {
+const Blog = ({ blog, reloadBlogs, username }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -25,7 +24,7 @@ const Blog = ({ blog, loadBlogs, username }) => {
     setVisible(!visible)
   }
 
-  //Handle update
+  //Handle like-update
   const handleLikeClick = async (event) => {
     event.preventDefault()
 
@@ -37,39 +36,18 @@ const Blog = ({ blog, loadBlogs, username }) => {
       url: blog.url,
     }
 
-    await blogService
-      .updateBlog(updatedBlog, blog.id)
-      .then((response) => {
-        console.log('Updated blog: ' + JSON.stringify(response))
-        loadBlogs()
-        dispatch(
-          setMessage({
-            message: `You liked blog ${blog.title}`,
-            type: 'ok',
-          })
-        )
-      })
-      .catch((exception) => console.log('Blog update failed: ' + exception))
+    dispatch(updateLikesOfBlog(updatedBlog, blog.id))
+    reloadBlogs()
   }
 
+  //Handle delete
   const handleDeleteClick = async (event) => {
     event.preventDefault()
 
     if (!window.confirm(`Really delete ${blog.title}?`)) return
 
-    await blogService
-      .deleteBlog(blog.id)
-      .then((response) => {
-        console.log(response)
-        loadBlogs()
-        dispatch(
-          setMessage({
-            message: `Blog ${blog.title} deleted`,
-            type: 'ok',
-          })
-        )
-      })
-      .catch((error) => console.log('Poop hit the fan: ' + error))
+    dispatch(deleteBlog(blog.id, blog.title))
+    reloadBlogs()
   }
 
   return (
@@ -102,7 +80,7 @@ const Blog = ({ blog, loadBlogs, username }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  loadBlogs: PropTypes.func.isRequired,
+  reloadBlogs: PropTypes.func.isRequired,
   username: PropTypes.string.isRequired,
 }
 

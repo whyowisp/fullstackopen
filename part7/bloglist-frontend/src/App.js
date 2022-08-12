@@ -28,7 +28,7 @@ const App = () => {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
-      loadBlogs('App.js useEffect')
+      reloadBlogs('App.js useEffect')
     }
   }, []) //Runs only once per reload
 
@@ -39,8 +39,8 @@ const App = () => {
     }, 5000)
   }, [message])
 
-  //Important! Always use this method to reload page; send over to child components etc.
-  const loadBlogs = () => {
+  //Important! Always use this method to reload blogs from db; send over to child components etc.
+  const reloadBlogs = () => {
     dispatch(initializeBlogs())
   }
 
@@ -63,7 +63,7 @@ const App = () => {
 
       dispatch(setMessage({ message: 'Login successful', type: 'ok' }))
 
-      loadBlogs()
+      reloadBlogs()
     } catch (exception) {
       dispatch(setMessage({ message: 'Login failed', type: 'error' }))
     }
@@ -125,13 +125,13 @@ const App = () => {
         </div>
         <br></br>
         <Togglable buttonLabel="New blog">
-          <BlogForm loadBlogs={loadBlogs} />
+          <BlogForm reloadBlogs={reloadBlogs} />
         </Togglable>
         {blogs.map((blog) => (
           <Blog
             key={blog.id}
             blog={blog}
-            loadBlogs={loadBlogs}
+            reloadBlogs={reloadBlogs}
             username={user.name}
           />
         ))}

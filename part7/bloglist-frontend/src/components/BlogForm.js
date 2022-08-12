@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { createNewBlog } from '../reducers/blogReducer'
 
-const BlogForm = ({ loadBlogs }) => {
+const BlogForm = ({ reloadBlogs }) => {
   //Form-only related state is kept locally here, instead of redux store
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -24,13 +24,14 @@ const BlogForm = ({ loadBlogs }) => {
       url: url,
     }
     dispatch(createNewBlog(newBlog))
-    loadBlogs()
 
     setTitle('')
     setAuthor('')
     setUrl('')
     //Obs! Reset form fields
     event.target.reset()
+
+    reloadBlogs()
   }
 
   return (

@@ -55,4 +55,39 @@ export const createNewBlog = (newBlog) => {
       })
   }
 }
+
+export const updateLikesOfBlog = (updatedBlog, id) => {
+  return async (dispatch) => {
+    await blogService
+      .updateBlog(updatedBlog, id)
+      .then((response) => {
+        console.log('Updated blog: ' + JSON.stringify(response))
+        dispatch(
+          setMessage({
+            message: `You liked blog ${updatedBlog.title}`,
+            type: 'ok',
+          })
+        )
+      })
+      .catch((exception) => console.log('Blog update failed: ' + exception))
+  }
+}
+
+export const deleteBlog = (id, title) => {
+  return async (dispatch) => {
+    await blogService
+      .deleteBlog(id)
+      .then((response) => {
+        console.log(response)
+        dispatch(
+          setMessage({
+            message: `Blog ${title} deleted`,
+            type: 'ok',
+          })
+        )
+      })
+      .catch((error) => console.log('Poop hit the fan: ' + error))
+  }
+}
+
 export default blogSlice.reducer
