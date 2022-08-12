@@ -6,7 +6,7 @@ import Togglable from './components/Togglable'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { resetMessage, setMessage } from './reducers/messageReducer'
-import { setBlogs } from './reducers/blogReducer'
+import { initializeBlogs } from './reducers/blogReducer'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -40,11 +40,7 @@ const App = () => {
   }, [message])
 
   const loadBlogs = () => {
-    blogService.getAll().then((blogs) => {
-      //blogs.sort((a, b) => b.likes - a.likes)
-      dispatch(setBlogs(blogs))
-      console.log('Blogs loaded and sorted')
-    })
+    dispatch(initializeBlogs())
   }
 
   const createNewBlog = async (newBlog) => {
