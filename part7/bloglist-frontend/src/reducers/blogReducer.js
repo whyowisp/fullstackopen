@@ -6,11 +6,10 @@ const sortByLikesDesc = (blogs) => {
   blogs.sort((a, b) => b.likes - a.likes)
 }
 
+const initialState = null
 export const blogSlice = createSlice({
   name: 'blogs',
-  initialState: {
-    blogs: [],
-  },
+  initialState,
   reducers: {
     setBlogs(state, action) {
       return action.payload

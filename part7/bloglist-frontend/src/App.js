@@ -7,15 +7,19 @@ import Togglable from './components/Togglable'
 import { useSelector, useDispatch } from 'react-redux'
 import { resetMessage, setMessage } from './reducers/messageReducer'
 import { initializeBlogs } from './reducers/blogReducer'
+import { setUser, clearUser } from './reducers/loggedInUserReducer'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
+  //Login form data is stored in App. Data is cleared after login.
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
 
+  //Redux store states
+  const user = useSelector((state) => state.user)
+  console.log(user)
   const message = useSelector((state) => state.messager)
   const blogs = useSelector((state) => state.blogs)
 
@@ -26,11 +30,11 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      dispatch(setUser(user))
       blogService.setToken(user.token)
       reloadBlogs('App.js useEffect')
     }
-  }, []) //Runs only once per reload
+  }, [])
 
   //Clear notification box automatically. (This functionality has turned out to be unpredictable after redux refactor: ex 7.10)
   useEffect(() => {
@@ -39,7 +43,7 @@ const App = () => {
     }, 5000)
   }, [message])
 
-  //Important! Always use this method to reload blogs from db; send over to child components etc.
+  //Important! Always use this method to reload blogs from db; send over to child components etc. (Unpredictable behavior after ex 7.12)
   const reloadBlogs = () => {
     dispatch(initializeBlogs())
   }
@@ -53,20 +57,18 @@ const App = () => {
         password,
       })
 
+      //user login related stuff
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
-
       blogService.setToken(user.token)
-
-      setUser(user)
-      setUsername('')
-      setPassword('')
-
+      dispatch(setUser(user))
       dispatch(setMessage({ message: 'Login successful', type: 'ok' }))
 
       reloadBlogs()
     } catch (exception) {
       dispatch(setMessage({ message: 'Login failed', type: 'error' }))
     }
+    setUsername('')
+    setPassword('')
   }
 
   const handleLogoutClick = (event) => {
@@ -74,11 +76,11 @@ const App = () => {
     console.log(user.name + ' logged out')
     window.localStorage.removeItem('loggedBlogappUser')
 
-    setUser(null)
+    dispatch(clearUser())
   }
 
   //render
-  if (user === null) {
+  if (!user) {
     return (
       <div>
         <h2>Log in to application</h2>
@@ -107,9 +109,8 @@ const App = () => {
       </div>
     )
   }
-
-  //else
-  if (blogs.length > 0) {
+  //blogs existence must be checked, otherwise rendering (unexistent) variables causes errors
+  else if (blogs) {
     return (
       <div>
         <h2>blogs</h2>
