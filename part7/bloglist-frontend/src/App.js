@@ -5,6 +5,7 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import UserInfo from './components/UserInfo'
 import LoginForm from './components/LoginForm'
+import UsersView from './components/UsersView'
 
 import { useSelector, useDispatch } from 'react-redux'
 import { resetMessage } from './reducers/messageReducer'
@@ -27,11 +28,12 @@ const App = () => {
       const user = JSON.parse(loggedUserJSON)
       dispatch(setUser(user))
       blogService.setToken(user.token)
-      reloadBlogs('App.js useEffect')
+      reloadBlogs()
     }
   }, [])
 
   //Clear notification box automatically. (This functionality has turned out to be unpredictable after redux refactor: ex 7.10)
+  //Also this causes whole page re-render. Move in to component
   useEffect(() => {
     setTimeout(() => {
       dispatch(resetMessage())
@@ -68,6 +70,7 @@ const App = () => {
           <BlogForm reloadBlogs={reloadBlogs} />
         </Togglable>
         <BlogList />
+        <UsersView />
       </div>
     )
   }
