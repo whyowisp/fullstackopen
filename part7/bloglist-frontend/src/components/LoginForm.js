@@ -29,6 +29,7 @@ const LoginForm = ({ reloadBlogs }) => {
 
       reloadBlogs()
     } catch (exception) {
+      console.log(exception)
       dispatch(setMessage({ message: 'Login failed', type: 'error' }))
     }
   }
@@ -38,11 +39,11 @@ const LoginForm = ({ reloadBlogs }) => {
       <form className="loginform" onSubmit={handleLogin}>
         <div>
           username
-          <input type="text" name="Username" />
+          <input type="text" name="username" />
         </div>
         <div>
           password
-          <input type="password" name="Password" />
+          <input type="password" name="password" />
         </div>
         <button type="submit">login</button>
       </form>
