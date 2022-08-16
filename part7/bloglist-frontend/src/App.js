@@ -43,9 +43,12 @@ const App = () => {
     }, 5000)
   }, [message])
 
-  //Important! Always use this method to reload blogs from db; send over to child components etc. (Unpredictable behavior after ex 7.12)
+  //Important! Always use this method to reload blogs from db; send over to child components etc.
   const reloadBlogs = () => {
-    dispatch(initializeBlogs())
+    //SetTimeout() to let changes in db happen before reloading from there. Should try and find better solution.
+    setTimeout(() => {
+      dispatch(initializeBlogs())
+    }, 500)
   }
 
   const handleLogin = async (event) => {

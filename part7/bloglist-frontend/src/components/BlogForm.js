@@ -1,34 +1,25 @@
-import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { createNewBlog } from '../reducers/blogReducer'
 
 const BlogForm = ({ reloadBlogs }) => {
-  //Form-only related state is kept locally here, instead of redux store
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-
   const dispatch = useDispatch()
-
-  const handleInputChange = (event) => {
-    event.preventDefault()
-    setTitle(event.target.value)
-  }
 
   const addBlog = (event) => {
     event.preventDefault()
 
-    const newBlog = {
-      title: title,
-      author: author,
-      url: url,
-    }
-    dispatch(createNewBlog(newBlog))
+    const title = event.target.title.value
+    const author = event.target.author.value
+    const url = event.target.url.value
 
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-    //Obs! Reset form fields
+    dispatch(
+      createNewBlog({
+        title,
+        author,
+        url,
+      })
+    )
+
+    //Reset form fields
     event.target.reset()
 
     reloadBlogs()
@@ -39,33 +30,20 @@ const BlogForm = ({ reloadBlogs }) => {
       <form onSubmit={addBlog}>
         <div>
           title:
-          <input
-            id="titleInput"
-            type="text"
-            name="Title"
-            onChange={handleInputChange}
-            placeholder="title"
-          />
+          <input id="titleInput" type="text" name="title" placeholder="title" />
         </div>
         <div>
           author:
           <input
             id="authorInput"
             type="text"
-            name="Author"
-            onChange={({ target }) => setAuthor(target.value)}
+            name="author"
             placeholder="author"
           />
         </div>
         <div>
           url:
-          <input
-            id="urlInput"
-            type="text"
-            name="Url"
-            onChange={({ target }) => setUrl(target.value)}
-            placeholder="url"
-          />
+          <input id="urlInput" type="text" name="url" placeholder="url" />
         </div>
         <button id="blogSubmitButton" type="submit">
           Create
