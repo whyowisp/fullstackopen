@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { setMessage } from '../reducers/messageReducer'
@@ -8,14 +7,13 @@ import loginService from '../services/login'
 import blogService from '../services/blogs'
 
 const LoginForm = ({ reloadBlogs }) => {
-  //Login form related states. Cleared after login
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-
   const dispatch = useDispatch()
 
   const handleLogin = async (event) => {
     event.preventDefault()
+
+    const username = event.target.username.value
+    const password = event.target.password.value
 
     try {
       const user = await loginService.login({
@@ -33,8 +31,6 @@ const LoginForm = ({ reloadBlogs }) => {
     } catch (exception) {
       dispatch(setMessage({ message: 'Login failed', type: 'error' }))
     }
-    setUsername('')
-    setPassword('')
   }
 
   return (
@@ -42,21 +38,11 @@ const LoginForm = ({ reloadBlogs }) => {
       <form className="loginform" onSubmit={handleLogin}>
         <div>
           username
-          <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
+          <input type="text" name="Username" />
         </div>
         <div>
           password
-          <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
+          <input type="password" name="Password" />
         </div>
         <button type="submit">login</button>
       </form>
