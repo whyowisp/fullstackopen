@@ -1,13 +1,11 @@
 import { useEffect } from 'react'
-import BlogList from './components/BlogList'
-import BlogForm from './components/BlogForm'
-import Notification from './components/Notification'
-import Togglable from './components/Togglable'
-import UserInfo from './components/UserInfo'
-import LoginForm from './components/LoginForm'
-import UsersView from './components/UsersView'
-
 import { useSelector, useDispatch } from 'react-redux'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+
+import UsersView from './components/UsersView'
+import UserBlogs from './components/UserBlogs'
+import Home from './components/Home'
+
 import { resetMessage } from './reducers/messageReducer'
 import { initializeBlogs } from './reducers/blogReducer'
 import { setUser } from './reducers/loggedInUserReducer'
@@ -48,32 +46,22 @@ const App = () => {
     }, 500)
   }
 
-  //render
-  if (!user) {
-    return (
-      <div>
-        <h2>Log in to application</h2>
-        <Notification />
-        <LoginForm reloadBlogs={reloadBlogs} />
-      </div>
-    )
-  }
-  //blogs existence must be checked, otherwise rendering (inexistent) variables causes errors
-  else if (blogs) {
-    return (
-      <div>
-        <h2>blogs</h2>
-        <Notification />
-        <UserInfo />
-        <br></br>
-        <Togglable buttonLabel="New blog">
-          <BlogForm reloadBlogs={reloadBlogs} />
-        </Togglable>
-        <BlogList />
-        <UsersView />
-      </div>
-    )
-  }
+  return (
+    <div>
+      <Router>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Home user={user} blogs={blogs} reloadBlogs={reloadBlogs} />
+            }
+          />
+          <Route path="/users" element={<UsersView />} />
+          <Route path="/users/:id" element={<UserBlogs />} />
+        </Routes>
+      </Router>
+    </div>
+  )
 }
 
 export default App
