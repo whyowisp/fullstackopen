@@ -1,8 +1,5 @@
-import { Link } from 'react-router-dom'
-
 import Notification from './Notification'
 import LoginForm from './LoginForm'
-import UserInfo from './UserInfo'
 import Togglable from './Togglable'
 import BlogForm from './BlogForm'
 import BlogList from './BlogList'
@@ -21,13 +18,10 @@ const Home = ({ user, blogs, reloadBlogs }) => {
   else if (blogs) {
     return (
       <div>
-        <Link to="/"> home </Link>
-        <Link to="/users"> users </Link>
         <h2>blogs</h2>
         <Notification />
-        <UserInfo />
         <br></br>
-        <Togglable buttonLabel="New blog">
+        <Togglable buttonLabel="new blog">
           <BlogForm reloadBlogs={reloadBlogs} />
         </Togglable>
         <BlogList />

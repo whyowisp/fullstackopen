@@ -4,7 +4,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 import UsersView from './components/UsersView'
 import UserBlogs from './components/UserBlogs'
+import BlogView from './components/BlogView'
 import Home from './components/Home'
+import Navigation from './components/Navigation'
 
 import { resetMessage } from './reducers/messageReducer'
 import { initializeBlogs } from './reducers/blogReducer'
@@ -49,6 +51,7 @@ const App = () => {
   return (
     <div>
       <Router>
+        <Navigation user={user} />
         <Routes>
           <Route
             path="/"
@@ -58,6 +61,7 @@ const App = () => {
           />
           <Route path="/users" element={<UsersView />} />
           <Route path="/users/:id" element={<UserBlogs />} />
+          <Route path="/blogs/:id" element={<BlogView />} />
         </Routes>
       </Router>
     </div>

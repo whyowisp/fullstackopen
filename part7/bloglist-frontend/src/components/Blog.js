@@ -1,9 +1,10 @@
-import { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Deletebutton, Likebutton } from './BlogButtons'
+import { Link } from 'react-router-dom'
+
+import { Deletebutton } from './BlogButtons'
 
 import { useDispatch } from 'react-redux'
-import { updateLikesOfBlog, deleteBlog } from '../reducers/blogReducer'
+import { deleteBlog } from '../reducers/blogReducer'
 
 const Blog = ({ blog, reloadBlogs, username }) => {
   const blogStyle = {
@@ -14,31 +15,7 @@ const Blog = ({ blog, reloadBlogs, username }) => {
     marginBottom: 5,
   }
 
-  const [visible, setVisible] = useState(false)
   const dispatch = useDispatch()
-
-  const hideWhenVisible = { display: visible ? 'none' : '' }
-  const showWhenVisible = { display: visible ? '' : 'none' }
-
-  const toggleVisibility = () => {
-    setVisible(!visible)
-  }
-
-  //Handle like-update
-  const handleLikeClick = async (event) => {
-    event.preventDefault()
-
-    const updatedBlog = {
-      user: blog.user.id,
-      likes: blog.likes + 1,
-      author: blog.author,
-      title: blog.title,
-      url: blog.url,
-    }
-
-    dispatch(updateLikesOfBlog(updatedBlog, blog.id))
-    reloadBlogs()
-  }
 
   //Handle delete
   const handleDeleteClick = async (event) => {
@@ -52,22 +29,13 @@ const Blog = ({ blog, reloadBlogs, username }) => {
 
   return (
     <div className="blogDiv">
-      <div style={{ ...blogStyle, ...hideWhenVisible }} id="detailsHidden">
-        <b>{blog.title}</b> - {blog.author}
-        <button id="showDetailsButton" onClick={toggleVisibility}>
-          Show
-        </button>
-      </div>
-      <div style={{ ...blogStyle, ...showWhenVisible }} id="detailsVisible">
-        <b>{blog.title}</b> - {blog.author}
-        <button onClick={toggleVisibility}>Hide</button>
-        <p>{blog.url}</p>
-        <p>
-          Likes: {blog.likes} <Likebutton handleLikeClick={handleLikeClick} />
-        </p>
-        <p>
-          <em>Posted by:</em> {blog.user.name}
-        </p>
+      <div style={{ ...blogStyle }}>
+        <b>
+          <Link to={`/blogs/${blog.id}`} state={blog}>
+            {blog.title}
+          </Link>
+        </b>{' '}
+        - {blog.author}{' '}
         <Deletebutton
           handleDeleteClick={handleDeleteClick}
           username={username}

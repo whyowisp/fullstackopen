@@ -15,8 +15,6 @@ const UsersView = () => {
   if (users) {
     return (
       <div>
-        <Link to="/"> home </Link>
-        <Link to="/users"> users </Link>
         <h2>Users</h2>
         <table>
           <thead>

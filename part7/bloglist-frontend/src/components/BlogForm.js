@@ -46,7 +46,7 @@ const BlogForm = ({ reloadBlogs }) => {
           <input id="urlInput" type="text" name="url" placeholder="url" />
         </div>
         <button id="blogSubmitButton" type="submit">
-          Create
+          create
         </button>
       </form>
     </div>
