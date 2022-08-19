@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom'
 import { Deletebutton } from './BlogButtons'
 
 import { useDispatch } from 'react-redux'
-import { updateLikesOfBlog, deleteBlog } from '../reducers/blogReducer'
+import { deleteBlog } from '../reducers/blogReducer'
 
-const Blog = ({ blog, reloadBlogs, username }) => {
+const Blog = ({ blog, username }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -24,28 +24,14 @@ const Blog = ({ blog, reloadBlogs, username }) => {
     if (!window.confirm(`Really delete ${blog.title}?`)) return
 
     dispatch(deleteBlog(blog.id, blog.title))
-    reloadBlogs()
+    //reloadBlogs()
   }
 
-  const handleLikeClick = async (event) => {
-    event.preventDefault()
-    const updatedBlog = {
-      user: blog.user.id,
-      likes: blog.likes + 1,
-      author: blog.author,
-      title: blog.title,
-      url: blog.url,
-    }
-    dispatch(updateLikesOfBlog(updatedBlog, blog.id))
-    reloadBlogs()
-  }
-
-  console.log(handleLikeClick)
   return (
     <div className="blogDiv">
       <div style={{ ...blogStyle }}>
         <b>
-          <Link to={`/blogs/${blog.id}`} state={blog}>
+          <Link to={`/blogs/${blog.id}`} state={blog.id}>
             {blog.title}
           </Link>
         </b>{' '}
@@ -62,7 +48,7 @@ const Blog = ({ blog, reloadBlogs, username }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  reloadBlogs: PropTypes.func.isRequired,
+  //reloadBlogs: PropTypes.func.isRequired,
   username: PropTypes.string.isRequired,
 }
 

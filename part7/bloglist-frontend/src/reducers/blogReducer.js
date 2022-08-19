@@ -6,6 +6,8 @@ const sortByLikesDesc = (blogs) => {
   blogs.sort((a, b) => b.likes - a.likes)
 }
 
+const generateId = () => Number((Math.random() * 1000000).toFixed(0))
+
 const initialState = null
 
 export const blogSlice = createSlice({
@@ -13,13 +15,27 @@ export const blogSlice = createSlice({
   initialState,
   reducers: {
     setBlogs(state, action) {
+      console.log(action.payload)
       return action.payload
+    },
+    removeBlog(state, action) {
+      const id = action.payload
+      return state.filter((blog) => blog.id !== id)
+    },
+    addBlog(state, action) {
+      state.push(action.payload)
+    },
+    updateLikes(state, action) {
+      const id = action.payload
+      const blog = state.find((blog) => blog.id === id)
+      const updatedBlog = { ...blog, likes: blog.likes + 1 }
+      return state.map((blog) => (blog.id !== id ? blog : updatedBlog))
     },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { setBlogs } = blogSlice.actions
+export const { setBlogs, removeBlog, addBlog, updateLikes } = blogSlice.actions
 
 //thunk functions (via redux-thunk)
 export const initializeBlogs = () => {
@@ -32,7 +48,15 @@ export const initializeBlogs = () => {
   }
 }
 
-export const createNewBlog = (newBlog) => {
+export const createNewBlog = (title, author, url, user) => {
+  const newBlog = {
+    title,
+    author,
+    url,
+    id: generateId(),
+    user,
+  }
+
   return async (dispatch) => {
     await blogService
       .createNew(newBlog)
@@ -43,6 +67,7 @@ export const createNewBlog = (newBlog) => {
             type: 'ok',
           })
         )
+        dispatch(initializeBlogs())
       })
       .catch((error) => {
         console.log('creating new object failed: ' + error)
@@ -56,8 +81,10 @@ export const createNewBlog = (newBlog) => {
   }
 }
 
-export const updateLikesOfBlog = (updatedBlog, id) => {
+export const updateLikesOfBlog = (blogToUpdate, id) => {
+  const updatedBlog = { ...blogToUpdate, likes: blogToUpdate.likes + 1 }
   return async (dispatch) => {
+    dispatch(updateLikes(id))
     await blogService
       .updateBlog(updatedBlog, id)
       .then((response) => {
@@ -75,6 +102,8 @@ export const updateLikesOfBlog = (updatedBlog, id) => {
 
 export const deleteBlog = (id, title) => {
   return async (dispatch) => {
+    console.log('blogReducer delete: what id?: ', id)
+    dispatch(removeBlog(id))
     await blogService
       .deleteBlog(id)
       .then((response) => {

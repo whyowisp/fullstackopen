@@ -6,7 +6,7 @@ import { setUser } from '../reducers/loggedInUserReducer'
 import loginService from '../services/login'
 import blogService from '../services/blogs'
 
-const LoginForm = ({ reloadBlogs }) => {
+const LoginForm = () => {
   const dispatch = useDispatch()
 
   const handleLogin = async (event) => {
@@ -27,7 +27,7 @@ const LoginForm = ({ reloadBlogs }) => {
       dispatch(setUser(user))
       dispatch(setMessage({ message: 'Login successful', type: 'ok' }))
 
-      reloadBlogs()
+      //reloadBlogs()
     } catch (exception) {
       console.log(exception)
       dispatch(setMessage({ message: 'Login failed', type: 'error' }))

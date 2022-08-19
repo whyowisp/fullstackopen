@@ -1,8 +1,10 @@
-import { useDispatch } from 'react-redux'
-import { createNewBlog } from '../reducers/blogReducer'
+import { useDispatch, useSelector } from 'react-redux'
+import { createNewBlog, initializeBlogs } from '../reducers/blogReducer'
 
-const BlogForm = ({ reloadBlogs }) => {
+const BlogForm = () => {
   const dispatch = useDispatch()
+  const user = useSelector((state) => state.user)
+  const users = useSelector((state) => state.users)
 
   const addBlog = (event) => {
     event.preventDefault()
@@ -10,19 +12,14 @@ const BlogForm = ({ reloadBlogs }) => {
     const title = event.target.title.value
     const author = event.target.author.value
     const url = event.target.url.value
+    const currentUser = users.find((n) => n.name === user.name)
 
-    dispatch(
-      createNewBlog({
-        title,
-        author,
-        url,
-      })
-    )
+    dispatch(createNewBlog(title, author, url, currentUser))
 
     //Reset form fields
     event.target.reset()
-
-    reloadBlogs()
+    initializeBlogs()
+    //reloadBlogs()
   }
 
   return (

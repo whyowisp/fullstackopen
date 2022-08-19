@@ -11,6 +11,7 @@ import Navigation from './components/Navigation'
 import { resetMessage } from './reducers/messageReducer'
 import { initializeBlogs } from './reducers/blogReducer'
 import { setUser } from './reducers/loggedInUserReducer'
+import { initializeUsers } from './reducers/usersReducer'
 
 import blogService from './services/blogs'
 
@@ -28,9 +29,15 @@ const App = () => {
       const user = JSON.parse(loggedUserJSON)
       dispatch(setUser(user))
       blogService.setToken(user.token)
-      reloadBlogs()
+      //reloadBlogs()
     }
   }, [])
+
+  useEffect(() => {
+    console.log('App.js useEffect launched by [dispatch]')
+    dispatch(initializeBlogs())
+    dispatch(initializeUsers())
+  }, [dispatch])
 
   //Clear notification box automatically. (This functionality has turned out to be unpredictable after redux refactor: ex 7.10)
   //Also this causes whole page re-render. Move in to component

@@ -1,37 +1,43 @@
 import { useLocation } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { Likebutton } from './BlogButtons'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { updateLikesOfBlog } from '../reducers/blogReducer'
 
 const BlogView = () => {
-  const dispatch = useDispatch()
   //useLocation() enables getting data passed trough <Link>
   const location = useLocation()
-  const blog = location.state
+  const blogs = useSelector((state) => state.blogs)
+
+  const dispatch = useDispatch()
+
+  const id = location.state
+  const currentBlog = blogs.find((currentBlog) => currentBlog.id === id)
 
   const handleLikeClick = async (event) => {
     event.preventDefault()
-    const updatedBlog = {
-      user: blog.user.id,
-      likes: blog.likes + 1,
-      author: blog.author,
-      title: blog.title,
-      url: blog.url,
+    const blogToUpdate = {
+      user: currentBlog.user.id,
+      likes: currentBlog.likes,
+      author: currentBlog.author,
+      title: currentBlog.title,
+      url: currentBlog.url,
     }
-    dispatch(updateLikesOfBlog(updatedBlog, blog.id))
+    dispatch(updateLikesOfBlog(blogToUpdate, id))
     //reloadBlogs()
   }
 
   return (
     <div>
       <h2>
-        {blog.title} by {blog.author}
+        {currentBlog.title} by {currentBlog.author}
       </h2>
-      <a href={blog.url}>{blog.url}</a> <br></br>
-      {blog.likes} likes <Likebutton handleLikeClick={handleLikeClick} />{' '}
+      <a href={currentBlog.url}>{currentBlog.url}</a> <br></br>
+      {currentBlog.likes} likes{' '}
+      <button id="likeBlogButton" onClick={handleLikeClick}>
+        like
+      </button>{' '}
       <br></br>
-      added by {blog.user.username}
+      added by {currentBlog.user.username}
     </div>
   )
 }
