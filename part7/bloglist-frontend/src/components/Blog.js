@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { Deletebutton } from './BlogButtons'
 
 import { useDispatch } from 'react-redux'
-import { deleteBlog } from '../reducers/blogReducer'
+import { updateLikesOfBlog, deleteBlog } from '../reducers/blogReducer'
 
 const Blog = ({ blog, reloadBlogs, username }) => {
   const blogStyle = {
@@ -27,6 +27,20 @@ const Blog = ({ blog, reloadBlogs, username }) => {
     reloadBlogs()
   }
 
+  const handleLikeClick = async (event) => {
+    event.preventDefault()
+    const updatedBlog = {
+      user: blog.user.id,
+      likes: blog.likes + 1,
+      author: blog.author,
+      title: blog.title,
+      url: blog.url,
+    }
+    dispatch(updateLikesOfBlog(updatedBlog, blog.id))
+    reloadBlogs()
+  }
+
+  console.log(handleLikeClick)
   return (
     <div className="blogDiv">
       <div style={{ ...blogStyle }}>

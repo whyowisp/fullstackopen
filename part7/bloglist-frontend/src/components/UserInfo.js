@@ -14,12 +14,12 @@ const UserInfo = () => {
   }
 
   return (
-    <inline>
+    <div>
       Logged in as <b>{user.name} </b>
       <button id="logoutButton" onClick={(event) => handleLogoutClick(event)}>
         logout
       </button>
-    </inline>
+    </div>
   )
 }
 

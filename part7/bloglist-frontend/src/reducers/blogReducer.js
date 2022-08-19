@@ -7,6 +7,7 @@ const sortByLikesDesc = (blogs) => {
 }
 
 const initialState = null
+
 export const blogSlice = createSlice({
   name: 'blogs',
   initialState,
