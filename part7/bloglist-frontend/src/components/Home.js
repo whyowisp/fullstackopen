@@ -4,13 +4,13 @@ import Togglable from './Togglable'
 import BlogForm from './BlogForm'
 import BlogList from './BlogList'
 
-const Home = ({ user, blogs, reloadBlogs }) => {
+const Home = ({ user, blogs }) => {
   if (!user) {
     return (
       <div>
         <h2>Log in to application</h2>
         <Notification />
-        <LoginForm reloadBlogs={reloadBlogs} />
+        <LoginForm />
       </div>
     )
   }
@@ -22,7 +22,7 @@ const Home = ({ user, blogs, reloadBlogs }) => {
         <Notification />
         <br></br>
         <Togglable buttonLabel="new blog">
-          <BlogForm reloadBlogs={reloadBlogs} />
+          <BlogForm />
         </Togglable>
         <BlogList />
       </div>

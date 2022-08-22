@@ -17,14 +17,15 @@ blogsRouter.post('/', async (request, response) => {
     response.status(400).end()
     return
   }
-  body.likes ? body : body.likes = 0
+  body.likes ? body : (body.likes = 0)
 
   const blog = new Blog({
     title: body.title,
     author: body.author,
     user: user._id,
+    comments: body.comments,
     url: body.url,
-    likes: body.likes
+    likes: body.likes,
   })
 
   const savedBlog = await blog.save()
@@ -57,7 +58,9 @@ blogsRouter.delete('/:id', async (request, response) => {
 
   //Remove blog from user at users db
   //return array of blog id objects not including blog id object which was deleted
-  user.blogs = user.blogs.filter(blog => blog._id.toString() !== toBeDeletedId)
+  user.blogs = user.blogs.filter(
+    (blog) => blog._id.toString() !== toBeDeletedId
+  )
   await user.save()
   response.status(204).end()
 })
@@ -68,7 +71,11 @@ blogsRouter.delete('/', async () => {
 })
 
 blogsRouter.put('/:id', async (request, response) => {
-  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, request.body, { new: true })
+  const updatedBlog = await Blog.findByIdAndUpdate(
+    request.params.id,
+    request.body,
+    { new: true }
+  )
   response.status(200).json(updatedBlog)
 })
 

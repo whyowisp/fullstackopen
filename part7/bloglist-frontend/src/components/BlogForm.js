@@ -19,7 +19,6 @@ const BlogForm = () => {
     //Reset form fields
     event.target.reset()
     initializeBlogs()
-    //reloadBlogs()
   }
 
   return (

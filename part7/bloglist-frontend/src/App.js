@@ -29,7 +29,6 @@ const App = () => {
       const user = JSON.parse(loggedUserJSON)
       dispatch(setUser(user))
       blogService.setToken(user.token)
-      //reloadBlogs()
     }
   }, [])
 
@@ -47,25 +46,12 @@ const App = () => {
     }, 5000)
   }, [message])
 
-  //Important! Always use this method to reload blogs from db; send over to child components etc.
-  const reloadBlogs = () => {
-    //SetTimeout() to let changes in db happen before reloading from there. There must be better solution
-    setTimeout(() => {
-      dispatch(initializeBlogs())
-    }, 500)
-  }
-
   return (
     <div>
       <Router>
         <Navigation user={user} />
         <Routes>
-          <Route
-            path="/"
-            element={
-              <Home user={user} blogs={blogs} reloadBlogs={reloadBlogs} />
-            }
-          />
+          <Route path="/" element={<Home user={user} blogs={blogs} />} />
           <Route path="/users" element={<UsersView />} />
           <Route path="/users/:id" element={<UserBlogs />} />
           <Route path="/blogs/:id" element={<BlogView />} />

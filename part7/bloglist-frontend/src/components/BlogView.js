@@ -4,11 +4,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { updateLikesOfBlog } from '../reducers/blogReducer'
 
 const BlogView = () => {
+  const dispatch = useDispatch()
   //useLocation() enables getting data passed trough <Link>
   const location = useLocation()
-  const blogs = useSelector((state) => state.blogs)
 
-  const dispatch = useDispatch()
+  const blogs = useSelector((state) => state.blogs)
 
   const id = location.state
   const currentBlog = blogs.find((currentBlog) => currentBlog.id === id)
@@ -16,15 +16,18 @@ const BlogView = () => {
   const handleLikeClick = async (event) => {
     event.preventDefault()
     const blogToUpdate = {
-      user: currentBlog.user.id,
+      user: currentBlog.user.id, //Note to self: user is a id in blog data structure
       likes: currentBlog.likes,
       author: currentBlog.author,
       title: currentBlog.title,
       url: currentBlog.url,
     }
     dispatch(updateLikesOfBlog(blogToUpdate, id))
-    //reloadBlogs()
   }
+
+  /*const handleNewComment = async (event) => {
+    event.preventDefault
+  }*/
 
   return (
     <div>
@@ -38,6 +41,12 @@ const BlogView = () => {
       </button>{' '}
       <br></br>
       added by {currentBlog.user.username}
+      <h3>Comments</h3>
+      <ul>
+        {currentBlog.comments.map((n) => (
+          <li key={n.id}>{n.comment}</li>
+        ))}
+      </ul>
     </div>
   )
 }

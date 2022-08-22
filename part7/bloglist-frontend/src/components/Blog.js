@@ -24,7 +24,6 @@ const Blog = ({ blog, username }) => {
     if (!window.confirm(`Really delete ${blog.title}?`)) return
 
     dispatch(deleteBlog(blog.id, blog.title))
-    //reloadBlogs()
   }
 
   return (
@@ -48,7 +47,6 @@ const Blog = ({ blog, username }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  //reloadBlogs: PropTypes.func.isRequired,
   username: PropTypes.string.isRequired,
 }
 

@@ -31,11 +31,17 @@ export const blogSlice = createSlice({
       const updatedBlog = { ...blog, likes: blog.likes + 1 }
       return state.map((blog) => (blog.id !== id ? blog : updatedBlog))
     },
+    addComment(action) {
+      console.log(
+        'blogReducer addComment called with action payload: ' + action.payload
+      )
+    },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { setBlogs, removeBlog, addBlog, updateLikes } = blogSlice.actions
+export const { setBlogs, removeBlog, addBlog, updateLikes, addComment } =
+  blogSlice.actions
 
 //thunk functions (via redux-thunk)
 export const initializeBlogs = () => {
@@ -86,7 +92,7 @@ export const updateLikesOfBlog = (blogToUpdate, id) => {
   return async (dispatch) => {
     dispatch(updateLikes(id))
     await blogService
-      .updateBlog(updatedBlog, id)
+      .updateBlogLikes(updatedBlog, id)
       .then((response) => {
         console.log('Updated blog: ' + JSON.stringify(response))
         dispatch(
@@ -95,6 +101,19 @@ export const updateLikesOfBlog = (blogToUpdate, id) => {
             type: 'ok',
           })
         )
+      })
+      .catch((exception) => console.log('Blog update failed: ' + exception))
+  }
+}
+
+//Work in progress, might cause issues 19/8/2022
+export const addCommentToBlog = (updatedBlog, id) => {
+  return async (dispatch) => {
+    await blogService
+      .addComment(updatedBlog, id)
+      .then((response) => {
+        console.log('Commented blog: ' + JSON.stringify(response))
+        dispatch(addComment(updatedBlog))
       })
       .catch((exception) => console.log('Blog update failed: ' + exception))
   }
