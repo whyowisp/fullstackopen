@@ -31,10 +31,14 @@ export const blogSlice = createSlice({
       const updatedBlog = { ...blog, likes: blog.likes + 1 }
       return state.map((blog) => (blog.id !== id ? blog : updatedBlog))
     },
-    addComment(action) {
-      console.log(
-        'blogReducer addComment called with action payload: ' + action.payload
-      )
+    addComment(state, action) {
+      const content = action.payload
+      const currentBlog = state.find((blog) => blog.id === content.id)
+      const updatedBlog = {
+        ...currentBlog,
+        comments: content.comments,
+      }
+      return state.map((blog) => (blog.id !== content.id ? blog : updatedBlog))
     },
   },
 })
@@ -93,8 +97,7 @@ export const updateLikesOfBlog = (blogToUpdate, id) => {
     dispatch(updateLikes(id))
     await blogService
       .updateBlogLikes(updatedBlog, id)
-      .then((response) => {
-        console.log('Updated blog: ' + JSON.stringify(response))
+      .then(() => {
         dispatch(
           setMessage({
             message: `You liked blog ${updatedBlog.title}`,
@@ -107,13 +110,12 @@ export const updateLikesOfBlog = (blogToUpdate, id) => {
 }
 
 export const addCommentToBlog = (updatedBlog, id) => {
-  //might still need to add that id
   return async (dispatch) => {
+    dispatch(addComment(updatedBlog))
     await blogService
       .addBlogComment(updatedBlog, id)
       .then((response) => {
-        console.log('Commented blog: ' + JSON.stringify(response))
-        dispatch(addComment(updatedBlog))
+        console.log('Comment posted to db: ' + JSON.stringify(response))
       })
       .catch((exception) => console.log('Blog update failed: ' + exception))
   }

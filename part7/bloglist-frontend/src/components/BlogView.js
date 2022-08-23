@@ -1,8 +1,11 @@
+import React from 'react'
 import { useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import Notification from './Notification'
 
 import { updateLikesOfBlog, addCommentToBlog } from '../reducers/blogReducer'
 
+/*
 const CommentForm = ({ blog }) => {
   const dispatch = useDispatch()
 
@@ -27,19 +30,18 @@ const CommentForm = ({ blog }) => {
       </form>
     </div>
   )
-}
+}*/
 
 const BlogView = () => {
   const dispatch = useDispatch()
+
   //useLocation() enables getting data passed trough <Link>
   const location = useLocation()
-
-  const blogs = useSelector((state) => state.blogs)
-
   const id = location.state
+  const blogs = useSelector((state) => state.blogs)
   const currentBlog = blogs.find((blog) => blog.id === id)
 
-  const handleLikeClick = async (event) => {
+  const handleLikeClick = (event) => {
     event.preventDefault()
     const blogToUpdate = {
       user: currentBlog.user.id, //Note to self: user is a id in blog data structure
@@ -51,24 +53,22 @@ const BlogView = () => {
     dispatch(updateLikesOfBlog(blogToUpdate, id))
   }
 
-  //Eikö?
-  /*
-  const handleLikeClick = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault()
-    const blogToUpdate = {
+    const newComment = { comment: event.target.comment.value }
+
+    const updatedBlog = {
       ...currentBlog,
-      user: currentBlog.user.id, //Note to self: user is a id in blog data structure
+      user: currentBlog.user.id,
+      comments: currentBlog.comments.concat(newComment),
     }
-    dispatch(updateLikesOfBlog(blogToUpdate, id))
+
+    dispatch(addCommentToBlog(updatedBlog, currentBlog.id))
   }
-  */
-
-  /*const handleNewComment = async (event) => {
-    event.preventDefault
-  }*/
-
+  console.log('BLog view reloaded')
   return (
     <div>
+      <Notification />
       <h2>
         {currentBlog.title} by {currentBlog.author}
       </h2>
@@ -80,7 +80,12 @@ const BlogView = () => {
       <br></br>
       added by {currentBlog.user.username}
       <h3>Comments</h3>
-      <CommentForm blog={currentBlog} />
+      <div>
+        <form onSubmit={handleSubmit}>
+          <input type="text" name="comment"></input>
+          <button type="submit">add comment</button>
+        </form>
+      </div>
       <ul>
         {currentBlog.comments.map((n) => (
           <li key={n._id}>{n.comment}</li>

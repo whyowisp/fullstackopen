@@ -26,8 +26,6 @@ const LoginForm = () => {
       blogService.setToken(user.token)
       dispatch(setUser(user))
       dispatch(setMessage({ message: 'Login successful', type: 'ok' }))
-
-      //reloadBlogs()
     } catch (exception) {
       console.log(exception)
       dispatch(setMessage({ message: 'Login failed', type: 'error' }))
