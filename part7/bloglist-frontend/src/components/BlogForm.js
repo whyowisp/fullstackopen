@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux'
+import { Button, TextField } from '@mui/material'
 import { createNewBlog, initializeBlogs } from '../reducers/blogReducer'
 
 const BlogForm = () => {
@@ -25,12 +26,21 @@ const BlogForm = () => {
     <div className="formDiv">
       <form onSubmit={addBlog}>
         <div>
-          title:
-          <input id="titleInput" type="text" name="title" placeholder="title" />
+          <TextField
+            variant="standard"
+            size="small"
+            label="title"
+            id="titleInput"
+            type="text"
+            name="title"
+            placeholder="title"
+          />
         </div>
         <div>
-          author:
-          <input
+          <TextField
+            variant="standard"
+            size="small"
+            label="author"
             id="authorInput"
             type="text"
             name="author"
@@ -38,12 +48,24 @@ const BlogForm = () => {
           />
         </div>
         <div>
-          url:
-          <input id="urlInput" type="text" name="url" placeholder="url" />
+          <TextField
+            variant="standard"
+            size="small"
+            label="url"
+            id="urlInput"
+            type="text"
+            name="url"
+            placeholder="url"
+          />
         </div>
-        <button id="blogSubmitButton" type="submit">
+        <Button
+          variant="contained"
+          size="small"
+          id="blogSubmitButton"
+          type="submit"
+        >
           create
-        </button>
+        </Button>
       </form>
     </div>
   )

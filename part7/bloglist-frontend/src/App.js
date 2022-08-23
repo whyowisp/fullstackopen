@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { Container } from '@mui/material'
 
 import UsersView from './components/UsersView'
 import UserBlogs from './components/UserBlogs'
@@ -47,7 +48,7 @@ const App = () => {
   }, [message])
 
   return (
-    <div>
+    <Container>
       <Router>
         <Navigation user={user} />
         <Routes>
@@ -57,7 +58,7 @@ const App = () => {
           <Route path="/blogs/:id" element={<BlogView />} />
         </Routes>
       </Router>
-    </div>
+    </Container>
   )
 }
 

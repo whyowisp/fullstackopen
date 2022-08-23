@@ -1,9 +1,11 @@
+import Button from '@mui/material/Button'
+
 const Deletebutton = ({ handleDeleteClick, username, blogUserName }) => {
   if (username === blogUserName) {
     return (
-      <button id="deleteButton" onClick={handleDeleteClick}>
+      <Button variant="contained" id="deleteButton" onClick={handleDeleteClick}>
         remove
-      </button>
+      </Button>
     )
   }
 }

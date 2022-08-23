@@ -1,5 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import { Button, Typography } from '@mui/material'
+
 import { clearUser } from '../reducers/loggedInUserReducer'
 
 const UserInfo = () => {
@@ -18,10 +20,17 @@ const UserInfo = () => {
 
   return (
     <div>
-      Logged in as <b>{user.name} </b>
-      <button id="logoutButton" onClick={(event) => handleLogoutClick(event)}>
+      <Typography variant="overline">
+        Logged in as <b>{user.name} </b>
+      </Typography>
+      <Button
+        variant="outlined"
+        size="small"
+        id="logoutButton"
+        onClick={(event) => handleLogoutClick(event)}
+      >
         logout
-      </button>
+      </Button>
     </div>
   )
 }

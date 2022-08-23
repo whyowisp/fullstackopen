@@ -1,3 +1,5 @@
+import { Typography } from '@mui/material'
+
 import Notification from './Notification'
 import LoginForm from './LoginForm'
 import Togglable from './Togglable'
@@ -8,7 +10,9 @@ const Home = ({ user, blogs }) => {
   if (!user) {
     return (
       <div>
-        <h2>Log in to application</h2>
+        <Typography variant="h4" gutterBottom>
+          Log in
+        </Typography>
         <Notification />
         <LoginForm />
       </div>
@@ -18,7 +22,9 @@ const Home = ({ user, blogs }) => {
   else if (blogs) {
     return (
       <div>
-        <h2>blogs</h2>
+        <Typography variant="h4" gutterBottom>
+          Blogs App
+        </Typography>
         <Notification />
         <br></br>
         <Togglable buttonLabel="new blog">
