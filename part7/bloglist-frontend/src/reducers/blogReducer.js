@@ -106,11 +106,11 @@ export const updateLikesOfBlog = (blogToUpdate, id) => {
   }
 }
 
-//Work in progress, might cause issues 19/8/2022
 export const addCommentToBlog = (updatedBlog, id) => {
+  //might still need to add that id
   return async (dispatch) => {
     await blogService
-      .addComment(updatedBlog, id)
+      .addBlogComment(updatedBlog, id)
       .then((response) => {
         console.log('Commented blog: ' + JSON.stringify(response))
         dispatch(addComment(updatedBlog))

@@ -1,7 +1,33 @@
 import { useLocation } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { updateLikesOfBlog } from '../reducers/blogReducer'
+import { updateLikesOfBlog, addCommentToBlog } from '../reducers/blogReducer'
+
+const CommentForm = ({ blog }) => {
+  const dispatch = useDispatch()
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    const newComment = { comment: event.target.comment.value }
+
+    const updatedBlog = {
+      ...blog,
+      user: blog.user.id,
+      comments: blog.comments.concat(newComment),
+    }
+
+    dispatch(addCommentToBlog(updatedBlog, blog.id))
+  }
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input type="text" name="comment"></input>
+        <button type="submit">add comment</button>
+      </form>
+    </div>
+  )
+}
 
 const BlogView = () => {
   const dispatch = useDispatch()
@@ -11,7 +37,7 @@ const BlogView = () => {
   const blogs = useSelector((state) => state.blogs)
 
   const id = location.state
-  const currentBlog = blogs.find((currentBlog) => currentBlog.id === id)
+  const currentBlog = blogs.find((blog) => blog.id === id)
 
   const handleLikeClick = async (event) => {
     event.preventDefault()
@@ -24,6 +50,18 @@ const BlogView = () => {
     }
     dispatch(updateLikesOfBlog(blogToUpdate, id))
   }
+
+  //Eikö?
+  /*
+  const handleLikeClick = async (event) => {
+    event.preventDefault()
+    const blogToUpdate = {
+      ...currentBlog,
+      user: currentBlog.user.id, //Note to self: user is a id in blog data structure
+    }
+    dispatch(updateLikesOfBlog(blogToUpdate, id))
+  }
+  */
 
   /*const handleNewComment = async (event) => {
     event.preventDefault
@@ -42,9 +80,10 @@ const BlogView = () => {
       <br></br>
       added by {currentBlog.user.username}
       <h3>Comments</h3>
+      <CommentForm blog={currentBlog} />
       <ul>
         {currentBlog.comments.map((n) => (
-          <li key={n.id}>{n.comment}</li>
+          <li key={n._id}>{n.comment}</li>
         ))}
       </ul>
     </div>

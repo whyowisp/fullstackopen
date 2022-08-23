@@ -39,7 +39,11 @@ const addBlogComment = async (newObject, blogId) => {
   const config = {
     headers: { Authorization: token },
   }
-  const response = await axios.put(`${baseUrl}/${blogId}/comments`, config)
+  const response = await axios.post(
+    `${baseUrl}/${blogId}/comments`,
+    newObject,
+    config
+  )
   return response.data
 }
 

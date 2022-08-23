@@ -70,11 +70,22 @@ blogsRouter.delete('/', async () => {
   await Blog.deleteMany({})
 })
 
-blogsRouter.put('/:id', async (request, response) => {
+blogsRouter.post('/:id/comments', async (request, response) => {
+  console.log('call comments: ' + request.params.id + ' ' + request.body)
   const updatedBlog = await Blog.findByIdAndUpdate(
     request.params.id,
     request.body,
     { new: true }
+  )
+  response.status(200).json(updatedBlog)
+})
+
+blogsRouter.put('/:id', async (request, response) => {
+  console.log('call likes: ' + request.params.id + ' ' + request.body)
+  const updatedBlog = await Blog.findByIdAndUpdate(
+    request.params.id,
+    request.body,
+    { new: true } //an updated object is returned
   )
   response.status(200).json(updatedBlog)
 })
