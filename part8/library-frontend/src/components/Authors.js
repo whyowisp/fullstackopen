@@ -33,17 +33,17 @@ const Authors = (props) => {
           ))}
         </tbody>
       </table>
-      <BirthyearForm />
+      <BirthyearForm authors={authors} />
     </div>
   )
 }
 
-const BirthyearForm = () => {
+const BirthyearForm = ({ authors }) => {
   const [name, setName] = useState('')
   const [setBornTo, setBirth] = useState('')
 
   const [editBirthyear] = useMutation(UPDATE_BIRTHYEAR, {
-    refetchQueries: [{ query: { ALL_AUTHORS } }],
+    refetchQueries: [{ query: ALL_AUTHORS }],
   })
   const submit = async (event) => {
     event.preventDefault()
@@ -60,10 +60,13 @@ const BirthyearForm = () => {
       <form onSubmit={submit}>
         <div>
           name{' '}
-          <input
-            value={name}
-            onChange={({ target }) => setName(target.value)}
-          />
+          <select onChange={(event) => setName(event.target.value)}>
+            {authors.map((author) => (
+              <option key={author.name} value={author.name}>
+                {author.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div>
           born{' '}
