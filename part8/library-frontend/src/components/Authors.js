@@ -13,7 +13,6 @@ const Authors = (props) => {
 
   const authors = result.data.allAuthors
 
-  console.log(result)
   return (
     <div>
       <h2>authors</h2>
