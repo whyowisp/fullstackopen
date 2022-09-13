@@ -1,9 +1,9 @@
 require('dotenv').config()
 const { ApolloServer, UserInputError, gql } = require('apollo-server')
 const mongoose = require('mongoose')
-const { v1: uuid } = require('uuid')
 const Book = require('./models/book')
 const Author = require('./models/author')
+const { find } = require('./models/book')
 
 const url = process.env.MONGODB_URI
 
@@ -98,8 +98,8 @@ let books = [
 const typeDefs = gql`
   type Book {
     title: String!
-    author: String!
     published: Int!
+    author: Author!
     genres: [String!]!
     id: ID!
   }
@@ -122,7 +122,7 @@ const typeDefs = gql`
   type Mutation {
     addBook(
       title: String!
-      author: String
+      author: String!
       published: Int!
       id: Int
       genres: [String]!
@@ -135,36 +135,23 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     //Book resolvers
-    bookCount: () => books.length, //ei
-    allBooks: (root, args) => {
-      //ei
-      if (!args.author && !args.genre) {
-        return books
-      }
-      const booksFilteredByAuthor = books.filter(
-        (book) => book.author === args.author
-      )
-      const booksFilteredByGenre = booksFilteredByAuthor.filter((book) =>
-        book.genres.find((genre) => genre === args.genre)
-      )
-      return booksFilteredByGenre // ... by author AND genre
+    bookCount: async () => Book.collection.countDocuments(),
+    allBooks: async (root, args) => {
+      return Book.find({}) //don´t query authors, it´s mongo object
     },
 
     //Author resolvers
-    authorCount: () => authors.length,
-    allAuthors: () => {
-      const authorsWithBooks = authors.map((author) => {
-        const authorsBooks = books.filter((book) => book.author === author.name)
-        return { ...author, bookCount: authorsBooks.length }
-      })
-      return authorsWithBooks
+    authorCount: async () => Author.collection.countDocuments(),
+    allAuthors: async () => {
+      return Author.find({})
     },
   },
   Mutation: {
     //Book mutations
     addBook: async (root, args) => {
-      //ei author fieldiä
-      const book = new Book({ ...args })
+      const author = await Author.find({ ...args.author })
+      const authorId = author[0]._id.toString()
+      const book = new Book({ ...args, author: authorId })
       try {
         await book.save()
       } catch (error) {
@@ -172,8 +159,9 @@ const resolvers = {
           invalidArgs: args,
         })
       }
-      return book
+      return book //return errors because author field is now mongo object instead of gql
     },
+    //Author mutations
     addAuthor: async (root, args) => {
       const author = new Author({ ...args })
       try {
@@ -185,16 +173,18 @@ const resolvers = {
       }
       return author
     },
-    //Author mutations
-    editAuthor: (root, args) => {
-      //ei
-      const author = authors.find((a) => a.name === args.name)
-      if (!author) return null
+    editAuthor: async (root, args) => {
+      const author = await Author.findOne({ name: args.name })
+      author.born = args.setBornTo
 
-      const updatedAuthor = { ...author, born: args.setBornTo }
-      authors = authors.map((a) => (a.name === args.name ? updatedAuthor : a))
-
-      return updatedAuthor
+      try {
+        await author.save()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
+      }
+      return author
     },
   },
 }
