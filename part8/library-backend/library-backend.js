@@ -149,9 +149,13 @@ const resolvers = {
   Mutation: {
     //Book mutations
     addBook: async (root, args) => {
+      if (args.title.length < 4)
+        throw new UserInputError('Book title too short')
+
       const author = await Author.find({ ...args.author })
       const authorId = author[0]._id.toString()
       const book = new Book({ ...args, author: authorId })
+
       try {
         await book.save()
       } catch (error) {
@@ -163,6 +167,9 @@ const resolvers = {
     },
     //Author mutations
     addAuthor: async (root, args) => {
+      if (args.name.length < 4)
+        throw new UserInputError('Author name too short')
+
       const author = new Author({ ...args })
       try {
         await author.save()
