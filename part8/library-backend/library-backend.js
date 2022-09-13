@@ -1,5 +1,22 @@
-const { ApolloServer, gql } = require('apollo-server')
+require('dotenv').config()
+const { ApolloServer, UserInputError, gql } = require('apollo-server')
+const mongoose = require('mongoose')
 const { v1: uuid } = require('uuid')
+const Book = require('./models/book')
+const Author = require('./models/author')
+
+const url = process.env.MONGODB_URI
+
+console.log('connecting to', url)
+
+mongoose
+  .connect(url)
+  .then(() => {
+    console.log('connected to MongoDB')
+  })
+  .catch((error) => {
+    console.log('error connection to MongoDB:', error.message)
+  })
 
 let authors = [
   {
@@ -26,7 +43,6 @@ let authors = [
     id: 'afa5b6f3-344d-11e9-a414-719c6709cf3e',
   },
 ]
-
 let books = [
   {
     title: 'Clean Code',
@@ -83,15 +99,15 @@ const typeDefs = gql`
   type Book {
     title: String!
     author: String!
-    published: String
-    id: String!
-    genres: [String]
+    published: Int!
+    genres: [String!]!
+    id: ID!
   }
 
   type Author {
     name: String!
     id: String!
-    born: Int
+    born: Int!
     bookCount: Int
   }
 
@@ -106,23 +122,22 @@ const typeDefs = gql`
   type Mutation {
     addBook(
       title: String!
-      author: String!
-      published: Int
+      author: String
+      published: Int!
       id: Int
-      genres: [String]
-    ): Book
-
-    addAuthor(name: String!, id: Int!, born: String): Author
-
+      genres: [String]!
+    ): Book!
     editAuthor(name: String!, setBornTo: Int!): Author
+    addAuthor(name: String!, id: String, born: Int!): Author
   }
 `
 
 const resolvers = {
   Query: {
     //Book resolvers
-    bookCount: () => books.length,
+    bookCount: () => books.length, //ei
     allBooks: (root, args) => {
+      //ei
       if (!args.author && !args.genre) {
         return books
       }
@@ -147,20 +162,32 @@ const resolvers = {
   },
   Mutation: {
     //Book mutations
-    addBook: (root, args) => {
-      if (!authors.find((author) => author.name === args.author)) {
-        const newAuthor = { name: args.author, id: uuid() }
-        authors = authors.concat(newAuthor)
+    addBook: async (root, args) => {
+      //ei author fieldiä
+      const book = new Book({ ...args })
+      try {
+        await book.save()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
       }
-      const book = { ...args, id: uuid() }
-      books = books.concat(book)
-
-      //Notetoself: this return value is to show user what has happened.
       return book
     },
-
+    addAuthor: async (root, args) => {
+      const author = new Author({ ...args })
+      try {
+        await author.save()
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
+      }
+      return author
+    },
     //Author mutations
     editAuthor: (root, args) => {
+      //ei
       const author = authors.find((a) => a.name === args.name)
       if (!author) return null
 
