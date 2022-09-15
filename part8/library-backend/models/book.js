@@ -17,4 +17,15 @@ const schema = new mongoose.Schema({
   genres: [{ type: String }],
 })
 
-module.exports = mongoose.model('Book', schema)
+schema.set('toJSON', {
+  transform: (document, returnObject) => {
+    //id is needed in string form
+    returnObject.id = returnObject._id.toString()
+    //delete unnecessary clutter
+    delete returnObject._id
+    delete returnObject.__v
+  },
+})
+
+const book = mongoose.model('Book', schema)
+module.exports = book
