@@ -83,8 +83,7 @@ const resolvers = {
     //Book resolvers
     bookCount: async () => Book.collection.countDocuments(),
     allBooks: async (root, args) => {
-      const books = await Book.find({}).populate('author', { name: 1 })
-      return books
+      return await Book.find({}).populate('author', { name: 1 })
     },
     selectedBooks: async (root, args) => {
       //Select all books if query has no genre
@@ -92,11 +91,9 @@ const resolvers = {
         return await Book.find({}).populate('author', { name: 1 })
       }
 
-      const books = await Book.find({
+      return await Book.find({
         genres: { $in: [args.genre] },
       }).populate('author', { name: 1 })
-
-      return books
     },
 
     //Author resolvers
