@@ -53,6 +53,7 @@ const typeDefs = gql`
   type Query {
     bookCount: Int!
     allBooks(author: String, genre: String): [Book!]
+    selectedBooks(author: String, genre: String): [Book!]
 
     authorCount: Int!
     allAuthors: [Author!]
@@ -83,6 +84,18 @@ const resolvers = {
     bookCount: async () => Book.collection.countDocuments(),
     allBooks: async (root, args) => {
       const books = await Book.find({}).populate('author', { name: 1 })
+      return books
+    },
+    selectedBooks: async (root, args) => {
+      //Select all books if query has no genre
+      if (args.genre === '') {
+        return await Book.find({}).populate('author', { name: 1 })
+      }
+
+      const books = await Book.find({
+        genres: { $in: [args.genre] },
+      }).populate('author', { name: 1 })
+
       return books
     },
 
