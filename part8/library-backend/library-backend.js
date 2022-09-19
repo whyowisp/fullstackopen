@@ -36,7 +36,7 @@ const typeDefs = gql`
   type Author {
     name: String!
     id: String!
-    born: Int!
+    born: Int
     bookCount: Int
   }
 
@@ -102,9 +102,26 @@ const resolvers = {
       if (!currentUser) throw new AuthenticationError('not authenticated')
       if (args.title.length < 4)
         throw new UserInputError('Book title too short')
-      //console.log('query from client looks like this in the backend: ' +JSON.stringify(args))
-      const author = await Author.find({ ...args.author })
-      const authorId = author[0]._id.toString()
+      console.log(
+        'query from client looks like this in the backend: ' +
+          JSON.stringify(args)
+      )
+
+      const authorExists = await Author.findOne({ name: args.author })
+      //Create new author if not found
+      if (!authorExists) {
+        const newAuthor = new Author({ name: args.author })
+        try {
+          await newAuthor.save()
+        } catch (error) {
+          throw new UserInputError(error.message, {
+            invalidArgs: args,
+          })
+        }
+      }
+
+      const author = await Author.findOne({ name: args.author })
+      const authorId = author._id.toString()
       const book = new Book({ ...args, author: authorId })
 
       try {
