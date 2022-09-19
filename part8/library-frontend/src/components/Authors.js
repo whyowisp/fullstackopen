@@ -33,7 +33,7 @@ const Authors = (props) => {
           ))}
         </tbody>
       </table>
-      <BirthyearForm authors={authors} />
+      {props.token ? <BirthyearForm authors={authors} /> : null}
     </div>
   )
 }
@@ -44,8 +44,11 @@ const BirthyearForm = ({ authors }) => {
 
   const [editBirthyear] = useMutation(UPDATE_BIRTHYEAR, {
     refetchQueries: [{ query: ALL_AUTHORS }],
+    onError: (error) => {
+      console.log('err happend: ' + error.message)
+    },
   })
-  const submit = async (event) => {
+  const submitAuthor = async (event) => {
     event.preventDefault()
 
     //NoteToSelf: variable setBornTo must be named same as it is named in server
@@ -57,17 +60,17 @@ const BirthyearForm = ({ authors }) => {
   return (
     <div>
       <h3>Set birth year</h3>
-      <form onSubmit={submit}>
-        <div>
-          name{' '}
-          <select onChange={(event) => setName(event.target.value)}>
-            {authors.map((author) => (
-              <option key={author.name} value={author.name}>
-                {author.name}
-              </option>
-            ))}
-          </select>
-        </div>
+      <div>
+        name{' '}
+        <select onChange={(event) => setName(event.target.value)}>
+          {authors.map((author) => (
+            <option key={author.name} value={author.name}>
+              {author.name}
+            </option>
+          ))}
+        </select>
+      </div>
+      <form onSubmit={submitAuthor}>
         <div>
           born{' '}
           <input

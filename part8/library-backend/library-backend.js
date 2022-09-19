@@ -64,10 +64,10 @@ const typeDefs = gql`
     addBook(
       title: String!
       author: String!
-      published: Int!
+      published: Int
       id: Int
-      genres: [String]!
-    ): Book!
+      genres: [String]
+    ): Book
 
     editAuthor(name: String!, setBornTo: Int!): Author
     addAuthor(name: String!, id: String, born: Int!): Author
@@ -82,7 +82,7 @@ const resolvers = {
     //Book resolvers
     bookCount: async () => Book.collection.countDocuments(),
     allBooks: async (root, args) => {
-      const books = await Book.find({}).populate('author', { name: 1, born: 1 })
+      const books = await Book.find({}).populate('author', { name: 1 })
       return books
     },
 
@@ -102,7 +102,7 @@ const resolvers = {
       if (!currentUser) throw new AuthenticationError('not authenticated')
       if (args.title.length < 4)
         throw new UserInputError('Book title too short')
-
+      //console.log('query from client looks like this in the backend: ' +JSON.stringify(args))
       const author = await Author.find({ ...args.author })
       const authorId = author[0]._id.toString()
       const book = new Book({ ...args, author: authorId })
@@ -114,7 +114,11 @@ const resolvers = {
           invalidArgs: args,
         })
       }
-      return book //return errors because author field is now mongo object instead of gql
+      //While adding new book to db must have author as an mongo object id,
+      //book returned as response have to be populated with actual author data
+      //This data might be available without querying db, but i couldn´t find it
+      const returningBook = book.populate('author', { name: 1 })
+      return returningBook
     },
     //Author mutations
     addAuthor: async (root, args) => {
@@ -135,7 +139,9 @@ const resolvers = {
       if (!context.currentUser) {
         throw new AuthenticationError('not authenticated')
       }
+
       const author = await Author.findOne({ name: args.name })
+
       author.born = args.setBornTo
 
       try {
@@ -164,6 +170,7 @@ const resolvers = {
       return user
     },
     login: async (root, args) => {
+      console.log('argumentit: ' + args.username + args.password)
       const user = await User.findOne({ username: args.username })
 
       if (!user || args.password !== 'salainen') {
