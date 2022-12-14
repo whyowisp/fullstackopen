@@ -1,0 +1,6 @@
+pompadil@LAPTOP-AS0TV6DM:/mnt/c/WINDOWS/system32$ docker container run -it ubuntu bash
+root@4730944b1959:/# mkdir /usr/src/app
+root@4730944b1959:/# touch /usr/src/app/index.js
+root@4730944b1959:/# ls /usr/src/app
+index.js
+root@4730944b1959:/# exit
