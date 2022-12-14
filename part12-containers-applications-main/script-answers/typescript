@@ -1,14 +1,0 @@
-Script started on 2022-12-13 13:12:33+02:00 [TERM="xterm-256color" TTY="/dev/pts/2" COLUMNS="120" LINES="30"]
-]0;pompadil@LAPTOP-AS0TV6DM: ~/projects/fullstackopen/part12-containers-applications-main/script-answers[01;32mpompadil@LAPTOP-AS0TV6DM[00m:[01;34m~/projects/fullstackopen/part12-containers-applications-main/script-answers[00m$ exitdocker container run -it ubuntu bash
-[?2004h]0;root@1f5569047bc8: /root@1f5569047bc8:/# [K]0;root@1f5569047bc8: /root@1f5569047bc8:/# mkdir usr/    /usr/src/app
-[?2004l[?2004h]0;root@1f5569047bc8: /root@1f5569047bc8:/# cd /usr/src/app
-[?2004l[?2004h]0;root@1f5569047bc8: /usr/src/approot@1f5569047bc8:/usr/src/app# ls
-[?2004l[?2004h]0;root@1f5569047bc8: /usr/src/approot@1f5569047bc8:/usr/src/app# touch index.js
-[?2004l[?2004h]0;root@1f5569047bc8: /usr/src/approot@1f5569047bc8:/usr/src/app# ls
-[?2004lindex.js
-[?2004h]0;root@1f5569047bc8: /usr/src/approot@1f5569047bc8:/usr/src/app# exit
-[?2004lexit
-]0;pompadil@LAPTOP-AS0TV6DM: ~/projects/fullstackopen/part12-containers-applications-main/script-answers[01;32mpompadil@LAPTOP-AS0TV6DM[00m:[01;34m~/projects/fullstackopen/part12-containers-applications-main/script-answers[00m$ exit
-exit
-
-Script done on 2022-12-13 13:14:03+02:00 [COMMAND_EXIT_CODE="0"]
