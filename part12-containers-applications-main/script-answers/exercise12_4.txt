@@ -1,0 +1,3 @@
+pompadil@LAPTOP-AS0TV6DM:/mnt/c/WINDOWS/system32$ docker start -i epic_ardinghelli
+root@4730944b1959:/# nano /usr/src/app/index.js
+root@4730944b1959:/#
